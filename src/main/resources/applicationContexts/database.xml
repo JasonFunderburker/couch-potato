@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="sqliteDataSource"/>
+        <property name="configLocation" value="classpath:mybatis/config.xml"/>
+    </bean>
+
+    <bean id="sqliteDataSource" class="org.sqlite.SQLiteDataSource">
+        <property name="url" value="jdbc:sqlite:classpath:db/couchPotato"/>
+    </bean>
+
+    <bean id="torrentItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="torrentItemDao" class="com.jasonfunderburker.couchpotato.dao.mybatis.MyBatisTorrentItemDao">
+        <property name="mapper" ref="torrentItemMapper"/>
+    </bean>
+
+</beans>
