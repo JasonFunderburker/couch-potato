@@ -1,11 +1,12 @@
 package com.jasonfunderburker.couchpotato.domain;
 
+import java.io.Serializable;
 import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
  */
-public class TorrentItem {
+public class TorrentItem implements Serializable {
     private Long id;
     private String name;
     private URL link;

@@ -8,10 +8,6 @@
         <property name="configLocation" value="classpath:mybatis/config.xml"/>
     </bean>
 
-    <bean id="sqliteDataSource" class="org.sqlite.SQLiteDataSource">
-        <property name="url" value="jdbc:sqlite:classpath:db/couchPotato"/>
-    </bean>
-
     <bean id="torrentItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
@@ -19,6 +15,11 @@
 
     <bean id="torrentItemDao" class="com.jasonfunderburker.couchpotato.dao.mybatis.MyBatisTorrentItemDao">
         <property name="mapper" ref="torrentItemMapper"/>
+    </bean>
+
+    <bean id="sqliteDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" lazy-init="false" destroy-method="close">
+        <property name="driverClassName" value="org.sqlite.JDBC"/>
+        <property name="url" value="jdbc:sqlite:c:\tomcat_8\apache-tomcat-8.0.36\conf\db\couchPotato.db"/>
     </bean>
 
 </beans>

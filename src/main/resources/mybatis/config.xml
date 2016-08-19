@@ -10,14 +10,7 @@
 
     </typeAliases>
 
-    <!--
-        <typeHandlers>
-            &lt;!&ndash;Данный обработчик позволяет передавать/получать поля типа java.String в/из полей БД типа jdbc.DATE,jdbc.TIMESTAMP -необходимо для палавающих дат &ndash;&gt;
-            <typeHandler handler="com.peterservice.openapi.utils.camel.mybatis.JdbcDateJavaStringTypeHandler"/>
-        </typeHandlers>
-    -->
-
     <mappers>
-        <mapper resource="mybatis/run.xml"/>
+        <mapper resource="mybatis/torrentItems.xml"/>
     </mappers>
 </configuration>
