@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Couch Potato</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../css/main.css" th:href="@{../css/main.css}" />
+</head>
+<body>
+	<h1 th:text="${message}">Some message</h1>
+    <table border="1" class="item-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item: ${itemList}">
+                <td th:text="${item.id}">10</td>
+                <td th:text="${item.name}">ItemName</td>
+            </tr>
+    </table>
+
+</body>
+</html>

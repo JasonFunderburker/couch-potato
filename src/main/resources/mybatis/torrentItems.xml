@@ -13,4 +13,8 @@
     <select id="findById" resultMap="torrentItemMap">
         select id, name from torrents_list tl where tl.id = #{id}
     </select>
+
+    <select id="getItemsList" resultMap="torrentItemMap">
+        select id, name from torrents_list tl
+    </select>
 </mapper>
