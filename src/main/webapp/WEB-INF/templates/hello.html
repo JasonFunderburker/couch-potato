@@ -3,23 +3,31 @@
 <head>
     <title>Couch Potato</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../css/main.css" th:href="@{../css/main.css}" />
+    <link rel="stylesheet" href="../../resources/css/main.css" th:href="@{/resources/css/main.css}"/>
 </head>
 <body>
 	<h1 th:text="${message}">Some message</h1>
-    <table border="1" class="item-table">
+    <form th:action="@{/itemList/check}" method="post">
+        <button type="submit">Check now</button>
+    </form>
+    <table class="item-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>NAME</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Error text</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="item: ${itemList}">
+        <tr th:each="item: ${itemList}">
                 <td th:text="${item.id}">10</td>
-                <td th:text="${item.name}">ItemName</td>
+                <td>
+                    <a th:text="${item.name}" href="https://www.google.ru" th:href="@{item.link}">itemName</a>
+                </td>
+                <td th:text="${item.status}">itemStatus</td>
+                <td th:text="${item.errorText}">itemErrorText</td>
             </tr>
     </table>
-
 </body>
 </html>

@@ -9,9 +9,9 @@ import java.net.URL;
 public class TorrentItem implements Serializable {
     private Long id;
     private String name;
-    private URL link;
+    private String link;
     private TorrentStatus status;
-    private String state;
+    private TorrentState state;
     private TorrentType type;
     private String errorText;
 
@@ -31,11 +31,11 @@ public class TorrentItem implements Serializable {
         this.name = name;
     }
 
-    public URL getLink() {
+    public String getLink() {
         return link;
     }
 
-    public void setLink(URL link) {
+    public void setLink(String link) {
         this.link = link;
     }
 
@@ -47,11 +47,11 @@ public class TorrentItem implements Serializable {
         this.status = status;
     }
 
-    public String getState() {
+    public TorrentState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(TorrentState state) {
         this.state = state;
     }
 

@@ -8,13 +8,26 @@
     <resultMap id="torrentItemMap" type="TorrentItem">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="link" column="link"/>
+        <result property="status" column="status_id" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result property="errorText" column="error_text"/>
     </resultMap>
 
     <select id="findById" resultMap="torrentItemMap">
-        select id, name from torrents_list tl where tl.id = #{id}
+        select id, name, link, status_id, error_text from torrents_list tl where tl.id = #{id}
     </select>
 
     <select id="getItemsList" resultMap="torrentItemMap">
-        select id, name from torrents_list tl
+        select id, name, link, status_id, error_text from torrents_list tl
     </select>
+
+    <update id="updateItem" parameterType="TorrentItem">
+        update torrents_list
+        set name = #{name},
+            link = #{link},
+            status_id = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            state = #{state.state},
+            error_text = #{errorText}
+         where id = #{id}
+    </update>
 </mapper>

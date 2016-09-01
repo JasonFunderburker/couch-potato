@@ -1,0 +1,32 @@
+body {
+    background-color: rgba(2, 255, 253, 0.10);
+}
+.item-table {
+    margin-bottom: 3em;
+    border-collapse:collapse;
+    border: 0.2em solid #175c39;
+}
+
+td {
+    border: 0.2em solid #175c39;
+    text-align: center;
+    width: 10em;
+    padding: 1em; 		}
+
+th {
+    border: 0.2em solid #175c39;
+    text-align: center;
+    padding: 1em;
+    background-color: rgba(35, 139, 87, 0.96);	     /* added a red background color to the heading cells  */
+    color: white;		}			      /* added a white font color to the heading text */
+
+tr {
+    height: 1em;	}
+
+table tr:nth-child(even) {		      /* added all even rows a #eee color  */
+    background-color: #cdeec8;		}
+
+table tr:nth-child(odd) {		     /* added all odd rows a #fff color  */
+    background-color:#fff;		}
+
+

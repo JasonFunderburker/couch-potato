@@ -12,4 +12,6 @@ public interface TorrentItemDao {
     TorrentItem findById(Long id);
 
     List<TorrentItem> getItemsList();
+
+    void updateItem(TorrentItem item);
 }

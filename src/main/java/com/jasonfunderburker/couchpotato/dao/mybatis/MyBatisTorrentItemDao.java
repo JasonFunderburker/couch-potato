@@ -22,6 +22,11 @@ public class MyBatisTorrentItemDao implements TorrentItemDao {
         return mapper.getItemsList();
     }
 
+    @Override
+    public void updateItem(TorrentItem item) {
+        mapper.updateItem(item);
+    }
+
     public TorrentItemMapper getMapper() {
         return mapper;
     }
