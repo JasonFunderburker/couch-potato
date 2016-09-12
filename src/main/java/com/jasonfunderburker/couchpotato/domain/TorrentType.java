@@ -22,4 +22,12 @@ public class TorrentType {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "TorrentType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

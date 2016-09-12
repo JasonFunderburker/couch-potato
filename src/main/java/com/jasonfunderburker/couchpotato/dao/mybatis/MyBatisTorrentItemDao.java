@@ -7,7 +7,7 @@ import com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper;
 import java.util.List;
 
 /**
- * Created by Ekaterina.Bashkankova on 19.08.2016
+ * Created by JasonFunderburker on 19.08.2016
  */
 public class MyBatisTorrentItemDao implements TorrentItemDao {
     TorrentItemMapper mapper;

@@ -3,7 +3,11 @@ package com.jasonfunderburker.couchpotato.service.check;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
+import com.jasonfunderburker.couchpotato.exceptions.TorrentStateRetrieveException;
+import com.jasonfunderburker.couchpotato.service.check.type.LostFilmTypeStateRetriever;
 import com.jasonfunderburker.couchpotato.service.check.type.TorrentStateRetriever;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -12,31 +16,56 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Ekaterina.Bashkankova on 01.09.2016
+ * Created by JasonFunderburker on 01.09.2016
  */
 @Service
 public class TorrentCheckServiceImpl implements TorrentCheckService {
+    private static Logger logger = LoggerFactory.getLogger(TorrentCheckServiceImpl.class);
+    private static final Map<String, TorrentStateRetriever> retrieverTypeMap;
+    static {
+        Map<String, TorrentStateRetriever> map = new HashMap<>();
+        map.put("lostFilm", new LostFilmTypeStateRetriever());
+        retrieverTypeMap = Collections.unmodifiableMap(map);
+    }
+
     @Override
     public void check(TorrentItem item) {
         try {
-            StringBuilder result = new StringBuilder();
+            StringBuilder responseBody = new StringBuilder();
             URL url = new URL(item.getLink());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    responseBody.append(line);
+                }
             }
-            rd.close();
-
+            logger.debug("responseBody: {}", responseBody.toString());
             TorrentStateRetriever checkType = getRetrieverType(item);
-            TorrentState newState = checkType.getState(result.toString());
-            if (!newState.equals(item.getState())) {
-                item.setStatus(TorrentStatus.REFRESHED);
-                item.setState(newState);
+            if (checkType != null) {
+                TorrentState newState = checkType.getState(responseBody.toString());
+                if (item.getState() == null) {
+                    item.setStatus(TorrentStatus.NEW);
+                    item.setState(newState);
+                }
+                else {
+                    if (!newState.equals(item.getState())) {
+                        item.setStatus(TorrentStatus.REFRESHED);
+                        item.setState(newState);
+                    } else {
+                        item.setStatus(TorrentStatus.UNCHANGED);
+                    }
+                }
+            }
+            else {
+                item.setStatus(TorrentStatus.ERROR);
+                item.setErrorText("Unsupported torrent type: "+ item.getType().getName());
             }
         }
         catch (MalformedURLException e) {
@@ -47,11 +76,17 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText("Can't read response from url: "+item.getLink());
         }
+        catch (TorrentStateRetrieveException e) {
+            item.setStatus(TorrentStatus.ERROR);
+            item.setErrorText(e.getMessage());
+        }
     }
 
     private TorrentStateRetriever getRetrieverType(TorrentItem item) {
-        //todo
-        return null;
+        if (retrieverTypeMap.containsKey(item.getType().getName()))
+            return retrieverTypeMap.get(item.getType().getName());
+        else
+            return null;
     }
 }
 

@@ -70,4 +70,17 @@ public class TorrentItem implements Serializable {
     public void setErrorText(String errorText) {
         this.errorText = errorText;
     }
+
+    @Override
+    public String toString() {
+        return "TorrentItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", link='" + link + '\'' +
+                ", status=" + status +
+                ", state=" + state +
+                ", type=" + type +
+                ", errorText='" + errorText + '\'' +
+                '}';
+    }
 }

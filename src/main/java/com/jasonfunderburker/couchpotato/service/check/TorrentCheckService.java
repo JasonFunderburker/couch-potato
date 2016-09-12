@@ -3,7 +3,7 @@ package com.jasonfunderburker.couchpotato.service.check;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 
 /**
- * Created by Ekaterina.Bashkankova on 01.09.2016
+ * Created by JasonFunderburker on 01.09.2016
  */
 public interface TorrentCheckService {
 

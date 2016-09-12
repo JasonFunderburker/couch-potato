@@ -16,6 +16,7 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Status</th>
+                <th>State</th>
                 <th>Error text</th>
             </tr>
         </thead>
@@ -23,9 +24,10 @@
         <tr th:each="item: ${itemList}">
                 <td th:text="${item.id}">10</td>
                 <td>
-                    <a th:text="${item.name}" href="https://www.google.ru" th:href="@{item.link}">itemName</a>
+                    <a th:text="${item.name}" href="https://www.google.ru" th:href="@{${item.link}}">itemName</a>
                 </td>
                 <td th:text="${item.status}">itemStatus</td>
+                <td th:text="${item.state != null} ? ${item.state.state}: ''">itemState</td>
                 <td th:text="${item.errorText}">itemErrorText</td>
             </tr>
     </table>
