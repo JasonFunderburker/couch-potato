@@ -7,12 +7,39 @@
 </head>
 <body>
 	<h1 th:text="${message}">Some message</h1>
-    <form th:action="@{/itemList/check}" method="post">
-        <button type="submit">Check now</button>
+    <form class="box" th:action="@{/itemList/check}" method="post">
+        <button class="button" type="submit">Check now</button>
     </form>
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <h2>Add new item to list</h2>
+            <a class="close" href="#" th:href="@{#}">x</a>
+            <form action="#" th:action="@{/itemList}" th:object="${torrentItem}" method="post">
+                <div>
+                    <label>Torrent item name</label>
+                </div>
+                <div>
+                    <input type="text" th:field="*{name}"/>
+                </div>
+                <div>
+                    <label>Torrent item link</label>
+                </div>
+                <div>
+                    <input type="text" th:field="*{link}"/>
+                </div>
+                <div class="box">
+                    <button class="button" type="submit" name="save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h1 th:text="${errorMessage}" class="error">Some message</h1>
     <table class="item-table">
         <thead>
             <tr>
+                <th>
+                    <a class="button" href="#popup1" th:href="@{#popup1}">Add item</a>
+                </th>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Status</th>
@@ -22,6 +49,11 @@
         </thead>
         <tbody>
         <tr th:each="item: ${itemList}">
+                <td>
+                    <form action="#" th:action="@{/itemList/{id}/remove(id=${item.id})}" method="post">
+                        <button type="submit" class="button">Delete item</button>
+                    </form>
+                </td>
                 <td th:text="${item.id}">10</td>
                 <td>
                     <a th:text="${item.name}" href="https://www.google.ru" th:href="@{${item.link}}">itemName</a>

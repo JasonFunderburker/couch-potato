@@ -57,4 +57,16 @@
             error_text = #{errorText}
          where id = #{id}
     </update>
+
+    <insert id="addItemToList" parameterType="TorrentItem">
+        insert into torrents_list
+        (name, link, status_id, type_id)
+        values
+        (#{name}, #{link}, 1, 1)
+    </insert>
+
+    <delete id="deleteItemFromList">
+        delete from torrents_list
+        where id = #{id}
+    </delete>
 </mapper>

@@ -5,6 +5,7 @@ import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentStateRetrieveException;
 import com.jasonfunderburker.couchpotato.service.check.type.LostFilmTypeStateRetriever;
+import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
 import com.jasonfunderburker.couchpotato.service.check.type.TorrentStateRetriever;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +27,6 @@ import java.util.Map;
 @Service
 public class TorrentCheckServiceImpl implements TorrentCheckService {
     private static Logger logger = LoggerFactory.getLogger(TorrentCheckServiceImpl.class);
-    private static final Map<String, TorrentStateRetriever> retrieverTypeMap;
-    static {
-        Map<String, TorrentStateRetriever> map = new HashMap<>();
-        map.put("lostFilm", new LostFilmTypeStateRetriever());
-        retrieverTypeMap = Collections.unmodifiableMap(map);
-    }
 
     @Override
     public void check(TorrentItem item) {
@@ -47,19 +42,22 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                 }
             }
             logger.debug("responseBody: {}", responseBody.toString());
-            TorrentStateRetriever checkType = getRetrieverType(item);
+            TorrentStateRetriever checkType = StateRetrieversDictionary.getRetrieverType(item.getType().getName());
             if (checkType != null) {
                 TorrentState newState = checkType.getState(responseBody.toString());
                 if (item.getState() == null) {
                     item.setStatus(TorrentStatus.NEW);
                     item.setState(newState);
+                    item.setErrorText(null);
                 }
                 else {
                     if (!newState.equals(item.getState())) {
                         item.setStatus(TorrentStatus.REFRESHED);
                         item.setState(newState);
+                        item.setErrorText(null);
                     } else {
                         item.setStatus(TorrentStatus.UNCHANGED);
+                        item.setErrorText(null);
                     }
                 }
             }
@@ -80,13 +78,6 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText(e.getMessage());
         }
-    }
-
-    private TorrentStateRetriever getRetrieverType(TorrentItem item) {
-        if (retrieverTypeMap.containsKey(item.getType().getName()))
-            return retrieverTypeMap.get(item.getType().getName());
-        else
-            return null;
     }
 }
 

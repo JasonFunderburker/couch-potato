@@ -1,7 +1,6 @@
 package com.jasonfunderburker.couchpotato.domain;
 
 import java.io.Serializable;
-import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
@@ -13,6 +12,7 @@ public class TorrentItem implements Serializable {
     private TorrentStatus status;
     private TorrentState state;
     private TorrentType type;
+    private String torrentType;
     private String errorText;
 
     public Long getId() {
@@ -71,6 +71,14 @@ public class TorrentItem implements Serializable {
         this.errorText = errorText;
     }
 
+    public String getTorrentType() {
+        return torrentType;
+    }
+
+    public void setTorrentType(String torrentType) {
+        this.torrentType = torrentType;
+    }
+
     @Override
     public String toString() {
         return "TorrentItem{" +
@@ -83,4 +91,6 @@ public class TorrentItem implements Serializable {
                 ", errorText='" + errorText + '\'' +
                 '}';
     }
+
+
 }

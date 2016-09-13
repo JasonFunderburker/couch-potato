@@ -14,4 +14,8 @@ public interface TorrentItemMapper {
     List<TorrentItem> getItemsList();
 
     void updateItem(TorrentItem item);
+
+    void addItemToList(TorrentItem item);
+
+    void deleteItemFromList(Long id);
 }

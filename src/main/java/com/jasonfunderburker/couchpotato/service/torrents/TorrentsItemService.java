@@ -4,7 +4,7 @@ import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import java.util.List;
 
 /**
- * Created by JasonFunderburker on 01.09.2016
+ * Created by Ekaterina.Bashkankova on 01.09.2016
  */
 
 public interface TorrentsItemService {
@@ -14,4 +14,8 @@ public interface TorrentsItemService {
     void checkItem(TorrentItem item);
 
     void checkAllItems();
+
+    void addItemToList(TorrentItem item) throws IllegalArgumentException;
+
+    void deleteItemFromList(long id);
 }
