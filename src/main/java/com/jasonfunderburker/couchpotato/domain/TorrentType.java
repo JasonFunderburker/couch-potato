@@ -7,6 +7,14 @@ public class TorrentType {
     private Long id;
     private String name;
 
+    public TorrentType() {
+        super();
+    }
+
+    public TorrentType(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

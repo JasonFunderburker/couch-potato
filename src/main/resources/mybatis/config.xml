@@ -7,8 +7,12 @@
 <configuration>
     <typeAliases>
         <package name="com.jasonfunderburker.couchpotato.domain"/>
-
+        <package name="com.jasonfunderburker.couchpotato.dao.mybatis.handler"/>
     </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="HasIdValueEnumTypeHandler" javaType="TorrentStatus"/>
+    </typeHandlers>
 
     <mappers>
         <mapper resource="mybatis/torrentItems.xml"/>

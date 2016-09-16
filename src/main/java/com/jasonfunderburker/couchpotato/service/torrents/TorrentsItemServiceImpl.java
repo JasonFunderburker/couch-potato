@@ -2,6 +2,7 @@ package com.jasonfunderburker.couchpotato.service.torrents;
 
 import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.service.check.TorrentCheckService;
 import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
         if (StateRetrieversDictionary.getRetrieverType(type) == null) {
             throw new IllegalArgumentException("Unsupported torrent type: \""+type+"\"");
         }
-        item.setTorrentType(type);
+        item.setType(new TorrentType(type));
         torrentItemDao.addItemToList(item);
     }
 

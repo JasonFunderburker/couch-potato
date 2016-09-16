@@ -12,7 +12,6 @@ public class TorrentItem implements Serializable {
     private TorrentStatus status;
     private TorrentState state;
     private TorrentType type;
-    private String torrentType;
     private String errorText;
 
     public Long getId() {
@@ -69,14 +68,6 @@ public class TorrentItem implements Serializable {
 
     public void setErrorText(String errorText) {
         this.errorText = errorText;
-    }
-
-    public String getTorrentType() {
-        return torrentType;
-    }
-
-    public void setTorrentType(String torrentType) {
-        this.torrentType = torrentType;
     }
 
     @Override
