@@ -18,6 +18,8 @@ public class LostFilmTypeRetrieverTest {
     @Before
     public void before() throws Exception {
         try (final WebClient webClient = new WebClient()) {
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setJavaScriptEnabled(false);
             checkedPage = webClient.getPage(getClass().getResource("/htmlpageSample.html"));
         }
 

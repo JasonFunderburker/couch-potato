@@ -13,12 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 01.09.2016
@@ -29,10 +25,12 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
 
     @Override
     public void check(TorrentItem item) {
+        logger.debug("check item: {}", item);
         try {
             final HtmlPage checkedPage;
             try (final WebClient webClient = new WebClient()) {
-                webClient.getOptions().setJavaScriptEnabled(true);
+                webClient.getOptions().setJavaScriptEnabled(false);
+                webClient.getOptions().setThrowExceptionOnScriptError(false);
                 checkedPage = webClient.getPage(item.getLink());
             }
             logger.debug("response: {}", checkedPage);

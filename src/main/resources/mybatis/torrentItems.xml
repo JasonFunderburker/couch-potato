@@ -57,9 +57,9 @@
 
     <insert id="addItemToList" parameterType="TorrentItem">
         insert into torrents_list
-        (name, link, status_id, type_id)
+        (name, link, status_id, type_id, state)
         values
-        (#{name}, #{link}, 1, 1)
+        (#{name}, #{link}, #{status, typeHandler=TorrentStatusEnumTypeHandler}, #{type, typeHandler=TorrentTypeEnumTypeHandler}, #{state.state})
     </insert>
 
     <delete id="deleteItemFromList">
