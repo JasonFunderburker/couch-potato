@@ -11,7 +11,8 @@
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler handler="HasIdValueEnumTypeHandler" javaType="TorrentStatus"/>
+        <typeHandler handler="TorrentStatusEnumTypeHandler" javaType="TorrentStatus"/>
+        <typeHandler handler="TorrentTypeEnumTypeHandler" javaType="TorrentType"/>
     </typeHandlers>
 
     <mappers>

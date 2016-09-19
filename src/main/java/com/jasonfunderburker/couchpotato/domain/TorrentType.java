@@ -1,25 +1,27 @@
 package com.jasonfunderburker.couchpotato.domain;
 
+import com.jasonfunderburker.couchpotato.dao.mybatis.handler.HasIdValue;
+
 /**
  * Created by JasonFunderburker on 19.08.2016
  */
-public class TorrentType {
-    private Long id;
+public enum TorrentType implements HasIdValue {
+    LOST_FILM(1, "lostfilm");
+
+    private int id;
     private String name;
 
-    public TorrentType() {
-        super();
-    }
-
-    public TorrentType(String name) {
+    private TorrentType(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    @Override
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

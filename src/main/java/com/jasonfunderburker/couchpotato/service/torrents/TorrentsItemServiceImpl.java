@@ -48,12 +48,8 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     @Override
     public void addItemToList(TorrentItem item) throws IllegalArgumentException {
         logger.debug("add item: {}", item);
-        String type = getTypeNameFromLink(item.getLink());
-        logger.debug("item type: {}", type);
-        if (StateRetrieversDictionary.getRetrieverType(type) == null) {
-            throw new IllegalArgumentException("Unsupported torrent type: \""+type+"\"");
-        }
-        item.setType(new TorrentType(type));
+        item.setType(getTypeNameFromLink(item.getLink()));
+        checkService.check(item);
         torrentItemDao.addItemToList(item);
     }
 
@@ -62,10 +58,19 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
         torrentItemDao.deleteItemFromList(id);
     }
 
-    private String getTypeNameFromLink(String link) {
+    private TorrentType getTypeNameFromLink(String link) {
         try {
             URL url = new URL(link);
-            return url.getAuthority().replace("www.","").replaceFirst("\\.(.+)", "");
+            String typeName = url.getAuthority().replace("www.","").replaceFirst("\\.(.+)", "");
+            TorrentType resultType = null;
+            for (TorrentType type :TorrentType.values()) {
+                if (type.getName().equals(typeName)) {
+                    resultType = type;
+                    break;
+                }
+            }
+            if (resultType == null) throw new IllegalArgumentException("Unsupported torrent type: \""+typeName+"\"");
+            return resultType;
         }
         catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid URL: "+link);

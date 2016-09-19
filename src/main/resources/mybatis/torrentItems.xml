@@ -8,14 +8,11 @@
         <id property="id" column="torrentId"/>
         <result property="name" column="torrentName"/>
         <result property="link" column="torrentLink"/>
-        <result property="status" column="statusId" typeHandler="HasIdValueEnumTypeHandler"/>
+        <result property="status" column="statusId" typeHandler="TorrentStatusEnumTypeHandler"/>
+        <result property="type" column="typeId" typeHandler="TorrentTypeEnumTypeHandler"/>
         <result property="errorText" column="errorText"/>
         <association property="state" javaType="TorrentState">
             <result property="state" column="torrentState"/>
-        </association>
-        <association property="type" javaType="TorrentType">
-            <result property="id" column="typeId"/>
-            <result property="name" column="typeName"/>
         </association>
     </resultMap>
 
@@ -52,7 +49,7 @@
         update torrents_list
         set name = #{name},
             link = #{link},
-            status_id = #{status, typeHandler=HasIdValueEnumTypeHandler},
+            status_id = #{status, typeHandler=TorrentStatusEnumTypeHandler},
             state = #{state.state},
             error_text = #{errorText}
          where id = #{id}
