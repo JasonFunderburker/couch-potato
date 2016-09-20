@@ -47,10 +47,14 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                     if (!newState.equals(item.getState())) {
                         item.setStatus(TorrentStatus.REFRESHED);
                         item.setState(newState);
-                        item.setErrorText(null);
+//                        item.setErrorText(null);
+                        String downloadLink = torrentRetriever.getDownloadLink(item);
+                        item.setErrorText(downloadLink);
                     } else {
                         item.setStatus(TorrentStatus.UNCHANGED);
-                        item.setErrorText(null);
+                        String downloadLink = torrentRetriever.getDownloadLink(item);
+                        item.setErrorText(downloadLink);
+//                        item.setErrorText(null);
                     }
                 }
             }

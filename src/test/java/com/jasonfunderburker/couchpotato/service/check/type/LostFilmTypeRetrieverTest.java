@@ -38,6 +38,6 @@ public class LostFilmTypeRetrieverTest {
     @Test
     public void testGetName() throws Exception {
         String name = retriever.getName(checkedPage);
-        System.out.println(name);
+        assertEquals("Название(Name)", name);
     }
 }
