@@ -13,6 +13,7 @@ public class TorrentItem implements Serializable {
     private TorrentState state;
     private TorrentType type;
     private String errorText;
+    private TorrentUserInfo userInfo;
 
     public Long getId() {
         return id;
@@ -70,6 +71,14 @@ public class TorrentItem implements Serializable {
         this.errorText = errorText;
     }
 
+    public TorrentUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(TorrentUserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     @Override
     public String toString() {
         return "TorrentItem{" +
@@ -80,6 +89,7 @@ public class TorrentItem implements Serializable {
                 ", state=" + state +
                 ", type=" + type +
                 ", errorText='" + errorText + '\'' +
+                ", userInfo=" + userInfo +
                 '}';
     }
 

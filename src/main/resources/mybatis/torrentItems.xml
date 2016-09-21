@@ -14,6 +14,10 @@
         <association property="state" javaType="TorrentState">
             <result property="state" column="torrentState"/>
         </association>
+        <association property="userInfo" javaType="TorrentUserInfo">
+            <result property="userName" column="userName"/>
+            <result property="hash" column="hash"/>
+        </association>
     </resultMap>
 
     <select id="findById" resultMap="torrentItemMap">
@@ -24,10 +28,11 @@
           tl.status_id statusId,
           tl.error_text errorText,
           tl.state torrentState,
-          tt.id typeId,
-          tt.name typeName
-        from torrents_list tl, torrents_types tt
-        where tl.type_id = tt.id
+          tl.type_id typeId,
+          tac.username userName,
+          tac.hash hash
+        from torrents_list tl, torrents_accounts tac
+        where tl.type_id = tac.type_id
         and tl.id = #{id}
     </select>
 
@@ -39,10 +44,11 @@
           tl.status_id statusId,
           tl.error_text errorText,
           tl.state torrentState,
-          tt.id typeId,
-          tt.name typeName
-        from torrents_list tl, torrents_types tt
-        where tl.type_id = tt.id
+          tl.type_id typeId,
+          tac.username userName,
+          tac.hash hash
+        from torrents_list tl, torrents_accounts tac
+        where tl.type_id = tac.type_id
     </select>
 
     <update id="updateItem" parameterType="TorrentItem">

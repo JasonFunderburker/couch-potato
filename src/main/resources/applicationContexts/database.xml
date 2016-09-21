@@ -19,7 +19,7 @@
 
     <bean id="sqliteDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" lazy-init="false" destroy-method="close">
         <property name="driverClassName" value="org.sqlite.JDBC"/>
-        <property name="url" value="jdbc:sqlite:c:\tomcat_8\apache-tomcat-8.0.36\conf\db\couchPotato.db"/>
+        <property name="url" value="jdbc:sqlite:..\conf\db\couchPotato.db"/>
     </bean>
 
 </beans>

@@ -1,5 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
@@ -38,14 +40,25 @@ public class LostFilmTypeRetriever implements TorrentRetriever {
             webClient.getCookieManager().setCookiesEnabled(true);
             HtmlPage page1 = webClient.getPage(item.getLink());
             HtmlForm form = page1.getForms().get(0);
-            form.getInputByName("login").type(item.getType().getUserName());
-            form.getInputByName("password").type(item.getType().getPassword());
-            form.getInputByValue(" Войти ").click();
-            page1 = webClient.getPage(item.getLink());
-            HtmlTableBody tableWithLink = page1.getFirstByXPath("//tbody[tr/td[@class='t_episode_num' and contains(text(),'" + item.getState().getState() + "')]]");
-            HtmlPage downloadPage = tableWithLink.getElementsByAttribute("td", "class", "t_episode_title").get(0).click();
-            HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
-            link = anchor.getHrefAttribute();
+            form.getInputByName("login").type(item.getUserInfo().getUserName());
+            form.getInputByName("password").type(item.getUserInfo().getHash());
+            Page page = form.getInputByValue(" Войти ").click();
+            if (page instanceof TextPage) {
+                link = ((TextPage) page).getContent();
+            }
+            else {
+                page1 = webClient.getPage(item.getLink());
+                HtmlTableBody tableWithLink = page1.getFirstByXPath("//tbody[tr/td[@class='t_episode_num' and contains(text(),'" + item.getState().getState() + "')]]");
+                HtmlPage downloadPage = tableWithLink.getElementsByAttribute("td", "class", "t_episode_title").get(0).click();
+                HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
+                if (anchor != null) {
+                    link = anchor.getHrefAttribute();
+                    anchor.click();
+                }
+                else {
+                    link = "link for '1080p' is not found";
+                }
+            }
         }
         return link;
     }
