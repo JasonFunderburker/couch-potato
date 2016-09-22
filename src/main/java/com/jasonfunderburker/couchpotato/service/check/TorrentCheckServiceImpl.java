@@ -65,11 +65,11 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
         }
         catch (MalformedURLException e) {
             item.setStatus(TorrentStatus.ERROR);
-            item.setErrorText("Error create url from item link: "+item.getLink());
+            item.setErrorText("Error create url from item link: "+item.getLink()+", cause: "+e.getMessage());
         }
         catch (IOException | FailingHttpStatusCodeException e) {
             item.setStatus(TorrentStatus.ERROR);
-            item.setErrorText("Can't read response from url: "+item.getLink());
+            item.setErrorText("Can't read response from url: "+item.getLink()+", cause: "+e.getMessage());
         }
         catch (TorrentRetrieveException e) {
             item.setStatus(TorrentStatus.ERROR);

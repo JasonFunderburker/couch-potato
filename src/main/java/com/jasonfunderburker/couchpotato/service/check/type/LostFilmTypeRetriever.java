@@ -7,10 +7,12 @@ import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.io.*;
+
 /**
  * Created by JasonFunderburker on 07.09.2016
  */
@@ -39,24 +41,32 @@ public class LostFilmTypeRetriever implements TorrentRetriever {
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getCookieManager().setCookiesEnabled(true);
             HtmlPage page1 = webClient.getPage(item.getLink());
+            logger.debug("page before login: {}", page1.asText());
             HtmlForm form = page1.getForms().get(0);
             form.getInputByName("login").type(item.getUserInfo().getUserName());
             form.getInputByName("password").type(item.getUserInfo().getHash());
             Page page = form.getInputByValue(" Войти ").click();
             if (page instanceof TextPage) {
-                link = ((TextPage) page).getContent();
+                logger.debug("page after login: {}", ((TextPage) page).getContent());
+                throw new TorrentRetrieveException("Login ERROR: "+ ((TextPage) page).getContent());
             }
             else {
-                page1 = webClient.getPage(item.getLink());
-                HtmlTableBody tableWithLink = page1.getFirstByXPath("//tbody[tr/td[@class='t_episode_num' and contains(text(),'" + item.getState().getState() + "')]]");
+                logger.debug("page after login: {}", ((HtmlPage) page).asText());
+                logger.debug("item link {}", item.getLink());
+                HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
+                logger.debug("pageWithShowAfterLogin {}", pageAfterLogin.asText());
+                HtmlTableBody tableWithLink = pageAfterLogin.getFirstByXPath("//tbody[tr/td[@class='t_episode_num' and contains(text(),'" + item.getState().getState() + "')]]");
+                logger.debug("tableWithLink: {}", tableWithLink.asText());
                 HtmlPage downloadPage = tableWithLink.getElementsByAttribute("td", "class", "t_episode_title").get(0).click();
+                logger.debug("downloadPage: {}", downloadPage.asText());
                 HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
+                logger.debug("anchor: {}", (anchor != null) ? anchor.asText() : "");
                 if (anchor != null) {
-                    link = anchor.getHrefAttribute();
-                    anchor.click();
+                    logger.debug("anchor.getHrefAttribute(): {}", link);
+                    IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream("c:/tomcat_8/apache-tomcat-8.0.36/conf/downloads/someTorrent_"+item.getId()+".torrent"));
                 }
                 else {
-                    link = "link for '1080p' is not found";
+                   throw new TorrentRetrieveException("link for '1080p' is not found");
                 }
             }
         }
