@@ -34,8 +34,7 @@ public class LostFilmTypeRetriever implements TorrentRetriever {
     }
 
     @Override
-    public String getDownloadLink(TorrentItem item) throws TorrentRetrieveException, IOException {
-        String link = "";
+    public void downloadLink(TorrentItem item) throws TorrentRetrieveException, IOException {
         try (final WebClient webClient = new WebClient()) {
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
@@ -62,14 +61,12 @@ public class LostFilmTypeRetriever implements TorrentRetriever {
                 HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
                 logger.debug("anchor: {}", (anchor != null) ? anchor.asText() : "");
                 if (anchor != null) {
-                    logger.debug("anchor.getHrefAttribute(): {}", link);
-                    IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream("c:/tomcat_8/apache-tomcat-8.0.36/conf/downloads/someTorrent_"+item.getId()+".torrent"));
+                    IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream("downloads"+File.separator+"torrent_"+item.getId()+".torrent"));
                 }
                 else {
                    throw new TorrentRetrieveException("link for '1080p' is not found");
                 }
             }
         }
-        return link;
     }
 }

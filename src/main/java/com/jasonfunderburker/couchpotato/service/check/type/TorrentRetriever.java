@@ -16,5 +16,5 @@ public interface TorrentRetriever {
 
     String getName(HtmlPage source) throws TorrentRetrieveException;
 
-    String getDownloadLink(TorrentItem item) throws TorrentRetrieveException, IOException;
+    void downloadLink(TorrentItem item) throws TorrentRetrieveException, IOException;
 }
