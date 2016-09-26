@@ -17,5 +17,6 @@
 
     <mappers>
         <mapper resource="mybatis/torrentItems.xml"/>
+        <mapper resource="mybatis/accounts.xml"/>
     </mappers>
 </configuration>

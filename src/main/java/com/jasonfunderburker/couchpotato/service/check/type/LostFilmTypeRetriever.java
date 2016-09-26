@@ -43,7 +43,7 @@ public class LostFilmTypeRetriever implements TorrentRetriever {
             logger.debug("page before login: {}", page1.asText());
             HtmlForm form = page1.getForms().get(0);
             form.getInputByName("login").type(item.getUserInfo().getUserName());
-            form.getInputByName("password").type(item.getUserInfo().getHash());
+            form.getInputByName("password").type(item.getUserInfo().getPassword());
             Page page = form.getInputByValue(" Войти ").click();
             if (page instanceof TextPage) {
                 logger.debug("page after login: {}", ((TextPage) page).getContent());

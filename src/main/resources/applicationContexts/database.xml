@@ -8,6 +8,11 @@
         <property name="configLocation" value="classpath:mybatis/config.xml"/>
     </bean>
 
+    <bean id="sqliteDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" lazy-init="false" destroy-method="close">
+        <property name="driverClassName" value="org.sqlite.JDBC"/>
+        <property name="url" value="jdbc:sqlite:../conf/db/couchPotato.db"/>
+    </bean>
+
     <bean id="torrentItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
@@ -17,9 +22,13 @@
         <property name="mapper" ref="torrentItemMapper"/>
     </bean>
 
-    <bean id="sqliteDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" lazy-init="false" destroy-method="close">
-        <property name="driverClassName" value="org.sqlite.JDBC"/>
-        <property name="url" value="jdbc:sqlite:../conf/db/couchPotato.db"/>
+    <bean id="accountsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.jasonfunderburker.couchpotato.mapper.AccountsMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="accountsDao" class="com.jasonfunderburker.couchpotato.dao.mybatis.MyBatisAccountsDao">
+        <property name="mapper" ref="accountsMapper"/>
     </bean>
 
 </beans>

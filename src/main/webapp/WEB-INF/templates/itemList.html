@@ -7,6 +7,9 @@
 </head>
 <body>
 	<h1 th:text="${message}">Some message</h1>
+    <div align="right">
+        <a href="settings.html" th:href="@{/settings}">Settings</a>
+    </div>
     <form class="box" th:action="@{/itemList/check}" method="post">
         <button class="button" type="submit">Check now</button>
     </form>
@@ -56,6 +59,7 @@
                 <td th:text="${item.state != null} ? ${item.state.state}: ''">itemState</td>
                 <td th:text="${item.errorText}">itemErrorText</td>
             </tr>
+        </tbody>
     </table>
 </body>
 </html>

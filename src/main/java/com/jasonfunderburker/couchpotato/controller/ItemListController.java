@@ -31,7 +31,7 @@ public class ItemListController {
 		model.addAttribute("message", "Hi, I'm couch potato, so i wrote this app cause i want to lay on my soft comfy coach and doing nothing when new episode of my favorite show is coming");
         model.addAttribute("itemList", torrentItemsList);
         model.addAttribute("torrentItem", new TorrentItem());
-		return "hello";
+		return "itemList";
 	}
 
     @RequestMapping(value = "/itemList", method = RequestMethod.POST)

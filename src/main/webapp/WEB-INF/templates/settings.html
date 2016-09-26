@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Settings</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <link rel="stylesheet" href="../../resources/css/main.css" th:href="@{/resources/css/main.css}"/>
+</head>
+<body>
+    <table class="item-table">
+    <tbody>
+        <tr th:each="torrentType: ${torrentTypes}">
+            <td>
+                <form action="#" th:action="@{./torrentType/{id}/account(id=${torrentType.id})}" th:object="${userInfo}" method="post">
+                    <div>
+                        <label th:text="${torrentType.name}">Torrent type</label>
+                    </div>
+                    <div>
+                        <label>UserName</label>
+                    </div>
+                    <input type="text" th:field="*{userName}">
+                    <div>
+                        <label>Password</label>
+                    </div>
+                    <input type="password" th:field="*{hash}">
+                    <button type="submit" class="button">Save</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
