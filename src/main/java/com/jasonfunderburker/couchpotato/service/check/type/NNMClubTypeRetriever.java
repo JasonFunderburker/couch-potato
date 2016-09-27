@@ -35,11 +35,11 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         logger.debug("state source: {}", source.asText());
         TorrentState result = new TorrentState();
         HtmlAnchor state =  source.getFirstByXPath("//a[contains(@href, 'download')]");
-        logger.debug("state anchor: {}", state.asText());
-        Matcher matcher = statePattern.matcher(state.asText());
+        logger.debug("state anchor href: {}", state.getHrefAttribute());
+        Matcher matcher = statePattern.matcher(state.getHrefAttribute());
         if (matcher.find()) {
             result.setState(matcher.group(1));
-            logger.debug("state: {}, state as text: {}", state, result.getState());
+            logger.debug("state as text: {}", result.getState());
         }
         else throw new TorrentRetrieveException("Error parsing state from url");
         return result;

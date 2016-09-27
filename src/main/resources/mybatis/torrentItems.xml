@@ -16,7 +16,7 @@
         </association>
         <association property="userInfo" javaType="TorrentUserInfo">
             <result property="userName" column="userName"/>
-            <result property="hash" column="hash"/>
+            <result property="clearHash" column="hash"/>
         </association>
     </resultMap>
 

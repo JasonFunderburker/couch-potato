@@ -2,9 +2,7 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import org.junit.Before;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +18,7 @@ public class LostFilmTypeRetrieverTest {
         try (final WebClient webClient = new WebClient()) {
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setJavaScriptEnabled(false);
-            checkedPage = webClient.getPage(getClass().getResource("/htmlpageSample.html"));
+            checkedPage = webClient.getPage(getClass().getResource("/lostfilmHtmlPageSample.html"));
         }
 
     }
