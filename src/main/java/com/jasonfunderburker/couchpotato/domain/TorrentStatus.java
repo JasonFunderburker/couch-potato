@@ -6,17 +6,17 @@ import com.jasonfunderburker.couchpotato.dao.mybatis.handler.HasIdValue;
  * Created by JasonFunderburker on 19.08.2016
  */
 public enum TorrentStatus implements HasIdValue {
-    NEW(1),REFRESHED(2),UNCHANGED(3),DOWNLOADED(4),ERROR(5);
+    NEW(1L),REFRESHED(2L),UNCHANGED(3L),DOWNLOADED(4L),ERROR(5L);
 
-    private int id;
+    private Long id;
 
-    private TorrentStatus(int id) {
+    private TorrentStatus(Long id) {
         this.id = id;
     }
-    public int getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

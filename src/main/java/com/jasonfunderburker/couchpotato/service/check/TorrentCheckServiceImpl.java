@@ -2,7 +2,6 @@ package com.jasonfunderburker.couchpotato.service.check;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
@@ -27,49 +26,44 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
     public void check(TorrentItem item) {
         logger.debug("check item: {}", item);
         try {
-            final HtmlPage checkedPage;
             try (final WebClient webClient = new WebClient()) {
-                webClient.getOptions().setJavaScriptEnabled(false);
+                webClient.getOptions().setJavaScriptEnabled(true);
                 webClient.getOptions().setThrowExceptionOnScriptError(false);
-                checkedPage = webClient.getPage(item.getLink());
-            }
-            logger.debug("response: {}", checkedPage);
-            TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
-            if (torrentRetriever != null) {
-                TorrentState newState = torrentRetriever.getState(checkedPage);
-                if (item.getState() == null) {
-                    item.setName(torrentRetriever.getName(checkedPage));
-                    item.setStatus(TorrentStatus.NEW);
-                    item.setState(newState);
-                    item.setErrorText(null);
-                }
-                else {
-                    if (!newState.equals(item.getState())) {
-                        item.setStatus(TorrentStatus.REFRESHED);
+                webClient.getCookieManager().setCookiesEnabled(true);
+
+                TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
+                if (torrentRetriever != null) {
+                    torrentRetriever.login(item, webClient);
+                    TorrentState newState = torrentRetriever.getState(item, webClient);
+                    if (item.getState() == null) {
+                        item.setName(torrentRetriever.getName(item, webClient));
+                        item.setStatus(TorrentStatus.NEW);
                         item.setState(newState);
                         item.setErrorText(null);
-                        torrentRetriever.downloadLink(item);
-                        item.setStatus(TorrentStatus.DOWNLOADED);
                     } else {
-                        item.setStatus(TorrentStatus.UNCHANGED);
-                        item.setErrorText(null);
+                        if (!newState.equals(item.getState())) {
+                            item.setStatus(TorrentStatus.REFRESHED);
+                            item.setState(newState);
+                            item.setErrorText(null);
+                            torrentRetriever.download(item, webClient);
+                            item.setStatus(TorrentStatus.DOWNLOADED);
+                        } else {
+                            item.setStatus(TorrentStatus.UNCHANGED);
+                            item.setErrorText(null);
+                        }
                     }
+                } else {
+                    item.setStatus(TorrentStatus.ERROR);
+                    item.setErrorText("Unsupported torrent type: " + item.getType().getName());
                 }
             }
-            else {
-                item.setStatus(TorrentStatus.ERROR);
-                item.setErrorText("Unsupported torrent type: "+ item.getType().getName());
-            }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             item.setStatus(TorrentStatus.ERROR);
-            item.setErrorText("Error create url from item link: "+item.getLink()+", cause: "+e.getMessage());
-        }
-        catch (IOException | FailingHttpStatusCodeException e) {
+            item.setErrorText("Error create url from item link: " + item.getLink() + ", cause: " + e.getMessage());
+        } catch (IOException | FailingHttpStatusCodeException e) {
             item.setStatus(TorrentStatus.ERROR);
-            item.setErrorText("Can't read response from url: "+item.getLink()+", cause: "+e.getMessage());
-        }
-        catch (TorrentRetrieveException e) {
+            item.setErrorText("Can't read response from url: " + item.getLink() + ", cause: " + e.getMessage());
+        } catch (TorrentRetrieveException e) {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText(e.getMessage());
         }

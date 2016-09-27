@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
@@ -12,9 +13,11 @@ import java.io.IOException;
  */
 public interface TorrentRetriever {
 
-    TorrentState getState(HtmlPage source) throws TorrentRetrieveException;
+    TorrentState getState(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
-    String getName(HtmlPage source) throws TorrentRetrieveException;
+    String getName(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
-    void downloadLink(TorrentItem item) throws TorrentRetrieveException, IOException;
+    void download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
+
+    void login(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 }

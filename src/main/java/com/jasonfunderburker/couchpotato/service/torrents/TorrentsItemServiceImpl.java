@@ -1,8 +1,10 @@
 package com.jasonfunderburker.couchpotato.service.torrents;
 
+import com.jasonfunderburker.couchpotato.dao.AccountsDao;
 import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.service.check.TorrentCheckService;
 import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
 import org.slf4j.Logger;
@@ -23,6 +25,8 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
 
     @Autowired
     TorrentItemDao torrentItemDao;
+    @Autowired
+    AccountsDao accountsDao;
     @Autowired
     TorrentCheckService checkService;
 
@@ -49,6 +53,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     public void addItemToList(TorrentItem item) throws IllegalArgumentException {
         logger.debug("add item: {}", item);
         item.setType(getTypeNameFromLink(item.getLink()));
+        item.setUserInfo(getUserInfoByType(item.getType()));
         checkService.check(item);
         torrentItemDao.addItemToList(item);
     }
@@ -75,5 +80,11 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
         catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid URL: "+link);
         }
+    }
+
+    private TorrentUserInfo getUserInfoByType(TorrentType type) {
+        TorrentUserInfo userInfo = accountsDao.getUserInfo(type.getId());
+        if (userInfo == null) throw new IllegalArgumentException("Invalid credentials: please add user information in settings");
+        return userInfo;
     }
 }

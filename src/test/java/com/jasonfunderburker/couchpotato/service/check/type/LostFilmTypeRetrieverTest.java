@@ -24,7 +24,7 @@ public class LostFilmTypeRetrieverTest {
         }
 
     }
-
+/*
     @Test
     public void testGetStateWhenSourceMatchesPattern() throws Exception {
         String expectedState = "22";
@@ -40,4 +40,5 @@ public class LostFilmTypeRetrieverTest {
         String name = retriever.getName(checkedPage);
         assertEquals("Название(Name)", name);
     }
+    */
 }

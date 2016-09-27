@@ -14,6 +14,7 @@ public class StateRetrieversDictionary {
     static {
         Map<TorrentType, TorrentRetriever> map = new HashMap<>();
         map.put(TorrentType.LOST_FILM, new LostFilmTypeRetriever());
+        map.put(TorrentType.NNM_CLUB, new NNMClubTypeRetriever());
         retrieverTypeMap = Collections.unmodifiableMap(map);
     }
 

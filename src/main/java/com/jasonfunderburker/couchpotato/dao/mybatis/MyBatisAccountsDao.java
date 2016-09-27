@@ -12,6 +12,11 @@ public class MyBatisAccountsDao implements AccountsDao {
         mapper.addUserInfo(userInfo);
     }
 
+    @Override
+    public TorrentUserInfo getUserInfo(Long typeId) {
+        return mapper.getUserInfo(typeId);
+    }
+
     public AccountsMapper getMapper() {
         return mapper;
     }

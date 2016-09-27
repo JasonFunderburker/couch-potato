@@ -3,10 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jasonfunderburker.couchpotato.mapper.AccountsMapper">
+
+    <resultMap id="userInfoMap" type="TorrentUserInfo">
+        <result property="torrentTypeId" column="typeId"/>
+        <result property="userName" column="userName"/>
+        <result property="clearHash" column="hash"/>
+    </resultMap>
+
     <insert id="addUserInfo" parameterType="TorrentUserInfo">
-        insert into torrents_accounts
+        insert or replace into torrents_accounts
         (type_id, username, hash)
         values
         (#{torrentTypeId}, #{userName}, #{hash})
     </insert>
+
+    <select id="getUserInfo" resultMap="userInfoMap">
+        select type_id typeId,
+              username userName,
+              hash hash
+        from torrents_accounts tac
+        where tac.type_id = #{typeId}
+    </select>
 </mapper>
