@@ -27,15 +27,18 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
     }
 
     @Override
-    public void download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
+    public String download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
+        String fileName = "";
         HtmlAnchor anchor = getDownloadLink(item, webClient);
         URL routePath = this.getClass().getClassLoader().getResource(File.separator);
         if (routePath != null) {
             File dir = new File(routePath.getPath() + File.separator + "downloads");
             logger.debug("absolute download directory path: " + dir.getAbsolutePath());
             boolean mkdirs = dir.mkdirs();
-            IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream(new File(dir, "torrent_" + item.getId() + ".torrent")));
+            fileName = "torrent_" + item.getId() + ".torrent";
+            IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream(new File(dir, fileName)));
         }
+        return fileName;
     }
 
     public abstract HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;

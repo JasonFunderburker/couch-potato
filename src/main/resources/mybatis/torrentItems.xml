@@ -11,6 +11,7 @@
         <result property="status" column="statusId" typeHandler="TorrentStatusEnumTypeHandler"/>
         <result property="type" column="typeId" typeHandler="TorrentTypeEnumTypeHandler"/>
         <result property="errorText" column="errorText"/>
+        <result property="fileName" column="fileName"/>
         <association property="state" javaType="TorrentState">
             <result property="state" column="torrentState"/>
         </association>
@@ -29,6 +30,7 @@
           tl.error_text errorText,
           tl.state torrentState,
           tl.type_id typeId,
+          tl.file_name fileName,
           tac.username userName,
           tac.hash hash
         from torrents_list tl, torrents_accounts tac
@@ -45,6 +47,7 @@
           tl.error_text errorText,
           tl.state torrentState,
           tl.type_id typeId,
+          tl.file_name fileName,
           tac.username userName,
           tac.hash hash
         from torrents_list tl, torrents_accounts tac
@@ -57,7 +60,8 @@
             link = #{link},
             status_id = #{status, typeHandler=TorrentStatusEnumTypeHandler},
             state = #{state.state},
-            error_text = #{errorText}
+            error_text = #{errorText},
+            file_name = #{fileName}
          where id = #{id}
     </update>
 

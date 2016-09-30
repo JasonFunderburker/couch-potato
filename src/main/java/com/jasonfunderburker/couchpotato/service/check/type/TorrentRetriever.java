@@ -17,7 +17,7 @@ public interface TorrentRetriever {
 
     String getName(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
-    void download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
+    String download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
     void login(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 }

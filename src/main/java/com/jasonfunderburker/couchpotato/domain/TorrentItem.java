@@ -14,6 +14,7 @@ public class TorrentItem implements Serializable {
     private TorrentType type;
     private String errorText;
     private TorrentUserInfo userInfo;
+    private String fileName;
 
     public Long getId() {
         return id;
@@ -79,6 +80,14 @@ public class TorrentItem implements Serializable {
         this.userInfo = userInfo;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public String toString() {
         return "TorrentItem{" +
@@ -90,6 +99,7 @@ public class TorrentItem implements Serializable {
                 ", type=" + type +
                 ", errorText='" + errorText + '\'' +
                 ", userInfo=" + userInfo +
+                ", fileName='" + fileName + '\'' +
                 '}';
     }
 

@@ -45,7 +45,8 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                             item.setStatus(TorrentStatus.REFRESHED);
                             item.setState(newState);
                             item.setErrorText(null);
-                            torrentRetriever.download(item, webClient);
+                            String fileName = torrentRetriever.download(item, webClient);
+                            item.setFileName(fileName);
                             item.setStatus(TorrentStatus.DOWNLOADED);
                         } else {
                             item.setStatus(TorrentStatus.UNCHANGED);
