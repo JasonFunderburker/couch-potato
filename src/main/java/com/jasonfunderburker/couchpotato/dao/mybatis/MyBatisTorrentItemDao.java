@@ -2,6 +2,7 @@ package com.jasonfunderburker.couchpotato.dao.mybatis;
 
 import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper;
 
 import java.util.List;
@@ -15,6 +16,11 @@ public class MyBatisTorrentItemDao implements TorrentItemDao {
     @Override
     public TorrentItem findById(Long id) {
         return mapper.findById(id);
+    }
+
+    @Override
+    public List<TorrentItem> findByStatus(TorrentStatus status) {
+        return mapper.findByStatus(status);
     }
 
     @Override

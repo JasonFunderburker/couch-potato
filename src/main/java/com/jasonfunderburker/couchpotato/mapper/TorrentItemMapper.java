@@ -1,6 +1,7 @@
 package com.jasonfunderburker.couchpotato.mapper;
 
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public interface TorrentItemMapper {
 
     TorrentItem findById(Long id);
+
+    List<TorrentItem> findByStatus(TorrentStatus status);
 
     List<TorrentItem> getItemsList();
 

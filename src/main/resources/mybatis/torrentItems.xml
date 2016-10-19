@@ -21,7 +21,7 @@
         </association>
     </resultMap>
 
-    <select id="findById" resultMap="torrentItemMap">
+    <select id="findByStatus" resultMap="torrentItemMap">
         select
           tl.id torrentId,
           tl.name torrentName,
@@ -30,12 +30,25 @@
           tl.error_text errorText,
           tl.state torrentState,
           tl.type_id typeId,
-          tl.file_name fileName,
-          tac.username userName,
-          tac.hash hash
+          tl.file_name fileName
+        from torrents_list tl
+        where tl.status_id = #{status, typeHandler=TorrentStatusEnumTypeHandler}
+    </select>
+
+    <select id="getItemsList" resultMap="torrentItemMap">
+        select
+        tl.id torrentId,
+        tl.name torrentName,
+        tl.link torrentLink,
+        tl.status_id statusId,
+        tl.error_text errorText,
+        tl.state torrentState,
+        tl.type_id typeId,
+        tl.file_name fileName,
+        tac.username userName,
+        tac.hash hash
         from torrents_list tl, torrents_accounts tac
         where tl.type_id = tac.type_id
-        and tl.id = #{id}
     </select>
 
     <select id="getItemsList" resultMap="torrentItemMap">
