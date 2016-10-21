@@ -68,7 +68,10 @@ public class DownloadsController {
             response.setHeader(headerKey, headerValue);
 
             // get output stream of the response
-            IOUtils.copy(new FileInputStream(downloadFile), response.getOutputStream());
+            FileInputStream inputStream = new FileInputStream(downloadFile);
+            IOUtils.copy(inputStream, response.getOutputStream());
+            inputStream.close();
+            response.getOutputStream().close();
         }
     }
 }

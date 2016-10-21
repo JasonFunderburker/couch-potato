@@ -3,10 +3,10 @@ package com.jasonfunderburker.couchpotato.service.torrents;
 import com.jasonfunderburker.couchpotato.dao.AccountsDao;
 import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.service.check.TorrentCheckService;
-import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,11 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     @Override
     public List<TorrentItem> getItemsList() {
         return torrentItemDao.getItemsList();
+    }
+
+    @Override
+    public List<TorrentItem> findByStatus(TorrentStatus status) {
+        return torrentItemDao.findByStatus(status);
     }
 
     @Override

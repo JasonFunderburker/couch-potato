@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -36,7 +37,12 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
             logger.debug("absolute download directory path: " + dir.getAbsolutePath());
             boolean mkdirs = dir.mkdirs();
             fileName = "torrent_" + item.getId() + ".torrent";
-            IOUtils.copy(anchor.click().getWebResponse().getContentAsStream(), new FileOutputStream(new File(dir, fileName)));
+            FileOutputStream outputStream = new FileOutputStream(new File(dir, fileName));
+            InputStream inputStream = anchor.click().getWebResponse().getContentAsStream();
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+            
         }
         return fileName;
     }

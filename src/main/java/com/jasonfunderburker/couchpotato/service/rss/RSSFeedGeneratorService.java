@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface RSSFeedGeneratorService {
 
-    RSSFeed generateFor(List<TorrentItem> itemList);
+    RSSFeed generateFor(List<TorrentItem> itemList, String linkPrefix);
 }
