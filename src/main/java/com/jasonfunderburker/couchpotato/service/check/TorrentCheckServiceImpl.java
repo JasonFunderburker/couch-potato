@@ -25,38 +25,37 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
     @Override
     public void check(TorrentItem item) {
         logger.debug("check item: {}", item);
-        try {
-            try (final WebClient webClient = new WebClient()) {
-                webClient.getOptions().setJavaScriptEnabled(true);
-                webClient.getOptions().setThrowExceptionOnScriptError(false);
-                webClient.getCookieManager().setCookiesEnabled(true);
+        try (final WebClient webClient = new WebClient()) {
+            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getCookieManager().setCookiesEnabled(true);
 
-                TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
-                if (torrentRetriever != null) {
-                    torrentRetriever.login(item, webClient);
-                    TorrentState newState = torrentRetriever.getState(item, webClient);
-                    if (item.getState() == null) {
-                        item.setName(torrentRetriever.getName(item, webClient));
-                        item.setStatus(TorrentStatus.NEW);
+            TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
+            if (torrentRetriever != null) {
+                torrentRetriever.login(item, webClient);
+                TorrentState newState = torrentRetriever.getState(item, webClient);
+                if (item.getState() == null) {
+                    item.setName(torrentRetriever.getName(item, webClient));
+                    item.setStatus(TorrentStatus.NEW);
+                    item.setState(newState);
+                    item.setErrorText(null);
+                } else {
+                    if (!newState.equals(item.getState())) {
+                        item.setStatus(TorrentStatus.REFRESHED);
                         item.setState(newState);
                         item.setErrorText(null);
+                        String fileName = torrentRetriever.download(item, webClient);
+                        item.setFileName(fileName);
+                        item.setStatus(TorrentStatus.DOWNLOADED);
                     } else {
-                        if (!newState.equals(item.getState())) {
-                            item.setStatus(TorrentStatus.REFRESHED);
-                            item.setState(newState);
-                            item.setErrorText(null);
-                            String fileName = torrentRetriever.download(item, webClient);
-                            item.setFileName(fileName);
-                            item.setStatus(TorrentStatus.DOWNLOADED);
-                        } else {
-                            item.setStatus(TorrentStatus.UNCHANGED);
-                            item.setErrorText(null);
-                        }
+                        item.setStatus(TorrentStatus.UNCHANGED);
+                        item.setErrorText(null);
                     }
-                } else {
-                    item.setStatus(TorrentStatus.ERROR);
-                    item.setErrorText("Unsupported torrent type: " + item.getType().getName());
                 }
+            } else {
+                item.setStatus(TorrentStatus.ERROR);
+                item.setErrorText("Unsupported torrent type: " + item.getType().getName());
             }
         } catch (MalformedURLException e) {
             item.setStatus(TorrentStatus.ERROR);

@@ -48,7 +48,9 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         logger.debug("page before login: {}", page1.asText());
         HtmlForm form = page1.getForms().get(0);
         form.getInputByName("login").type(item.getUserInfo().getUserName());
-        form.getInputByName("password").type(item.getUserInfo().getPassword());
+        String password = item.getUserInfo().getPassword();
+        if (password == null)  throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
+        form.getInputByName("password").type(password);
         Page page = form.getInputByValue(" Войти ").click();
         if (page instanceof TextPage) {
             logger.debug("page after login: {}", ((TextPage) page).getContent());

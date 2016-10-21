@@ -5,6 +5,7 @@ import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,13 @@ public class ItemListController {
 
     @RequestMapping(value = "/itemList/check", method = RequestMethod.POST)
     public String itemListStartCheck(ModelMap model) {
-        itemService.checkAllItems();
+        itemListStartCheck();
         return "redirect:/itemList";
+    }
+
+    @Scheduled(cron="0 0 21 * * *", zone = "Europe/Moscow")
+    public void itemListStartCheck() {
+        logger.debug("Start scheduled check");
+        itemService.checkAllItems();
     }
 }
