@@ -2,9 +2,7 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
@@ -12,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Ekaterina.Bashkankova on 27.09.2016
@@ -21,7 +17,6 @@ import java.util.regex.Pattern;
 public class NNMClubTypeRetriever extends BaseTypeRetriever {
     private static Logger logger = LoggerFactory.getLogger(NNMClubTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://nnmclub.to/forum/login.php";
-    private static final Pattern statePattern = Pattern.compile("id=(\\d+)");
 
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
@@ -34,12 +29,10 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         HtmlPage source = webClient.getPage(item.getLink());
         logger.debug("state source: {}", source.asText());
         TorrentState result = new TorrentState();
-        HtmlAnchor state =  source.getFirstByXPath("//a[contains(@href, 'download')]");
-        logger.debug("state anchor href: {}", state.getHrefAttribute());
-        Matcher matcher = statePattern.matcher(state.getHrefAttribute());
-        if (matcher.find()) {
-            result.setState(matcher.group(1));
-            logger.debug("state as text: {}", result.getState());
+        HtmlTableDataCell state =  source.getFirstByXPath("//tr[@class='row1' and td[contains(text(), 'Зарегистрирован:')]]/td[2]");
+        if (state != null) {
+            result.setState(state.asText().trim());
+            logger.debug("state : {}", result.getState());
         }
         else throw new TorrentRetrieveException("Error parsing state from url");
         return result;

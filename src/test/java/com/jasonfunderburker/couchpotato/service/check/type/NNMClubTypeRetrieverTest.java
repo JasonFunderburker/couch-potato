@@ -54,6 +54,6 @@ public class NNMClubTypeRetrieverTest {
 
         TorrentState state = retriever.getState(item, webClientMock);
 
-        System.out.println(state.getState());
+        assertEquals("11 Сен 2016 11:33:31", state.getState());
     }
 }
