@@ -29,6 +29,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setUseInsecureSSL(true);
             webClient.getCookieManager().setCookiesEnabled(true);
 
             TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
@@ -60,12 +61,15 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
         } catch (MalformedURLException e) {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText("Error create url from item link: " + item.getLink() + ", cause: " + e.getMessage());
+            logger.error("Error create url from item link: "+item.getLink(), e);
         } catch (IOException | FailingHttpStatusCodeException e) {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText("Can't read response from url: " + item.getLink() + ", cause: " + e.getMessage());
+            logger.error("Error create url from item link: "+item.getLink(), e);
         } catch (TorrentRetrieveException e) {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText(e.getMessage());
+            logger.error("Check item error",e);
         }
     }
 }
