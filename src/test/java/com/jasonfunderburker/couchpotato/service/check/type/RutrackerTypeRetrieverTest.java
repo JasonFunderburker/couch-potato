@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -11,16 +12,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 /**
- * Created by JasonFunderburker on 27.09.2016
+ * Created by Ekaterina.Bashkankova on 27.09.2016
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NNMClubTypeRetrieverTest {
-    private BaseTypeRetriever retriever = new NNMClubTypeRetriever();
+public class RutrackerTypeRetrieverTest {
+    private BaseTypeRetriever retriever = new RutrackerTypeRetriever();
     private TorrentItem item = new TorrentItem();
 
     @Mock
@@ -33,7 +34,7 @@ public class NNMClubTypeRetrieverTest {
             webClient.getOptions().setJavaScriptEnabled(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setCssEnabled(false);
-            checkedPage = webClient.getPage(getClass().getResource("/nnmClubHtmlPageSample.html"));
+            checkedPage = webClient.getPage(getClass().getResource("/rutrackerHtmlPageSample.html"));
         }
         when(webClientMock.getPage(anyString())).thenReturn(checkedPage);
         item.setLink("someLink");
@@ -44,13 +45,13 @@ public class NNMClubTypeRetrieverTest {
     public void testGetState() throws Exception {
         TorrentState state = retriever.getState(item, webClientMock);
 
-        assertEquals("11 Сен 2016 11:33:31", state.getState());
+        assertEquals("[ 13-Окт-16 06:59 ]", state.getState());
     }
 
     @Test
     public void testGetDownloadLink() throws Exception {
         HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
 
-        assertTrue(anchor.getHrefAttribute().contains("download.php?id=843729"));
+        assertEquals("dl.php?t=5295827", anchor.getHrefAttribute());
     }
 }

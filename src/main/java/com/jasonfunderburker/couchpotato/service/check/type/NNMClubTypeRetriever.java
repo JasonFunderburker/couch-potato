@@ -53,7 +53,7 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         Page page = form.getInputByName("login").click();
         if (!page.getWebResponse().getContentAsString().contains(item.getUserInfo().getUserName())) {
             logger.debug("page after login: {}", page.getWebResponse().getContentAsString());
-            throw new TorrentRetrieveException("Login ERROR: ");
+            throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         }
         logger.debug("page: {}", page instanceof HtmlPage ? ((HtmlPage) page).asText() : "");
     }
