@@ -8,7 +8,8 @@ import com.jasonfunderburker.couchpotato.dao.mybatis.handler.HasIdValue;
 public enum TorrentType implements HasIdValue {
     LOST_FILM(1L, "lostfilm"),
     NNM_CLUB(2L, "nnmclub"),
-    RUTRACKER(3L, "rutracker");
+    RUTRACKER(3L, "rutracker"),
+    NEW_STUDIO(4L, "newstudio");
 
     private Long id;
     private String name;
