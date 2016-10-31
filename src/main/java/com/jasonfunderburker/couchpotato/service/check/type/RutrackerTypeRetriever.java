@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
@@ -38,7 +39,7 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
     }
 
     @Override
-    public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+    public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, ElementNotFoundException, IOException {
         HtmlPage page1 = webClient.getPage(item.getLink());
         logger.debug("page before login: {}", page1.asText());
         HtmlElement formElement = page1.getHtmlElementById("login-form-quick");
