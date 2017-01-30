@@ -31,7 +31,10 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setUseInsecureSSL(true);
             webClient.getOptions().setRedirectEnabled(true);
-            webClient.getOptions().getProxyConfig().setProxyAutoConfigUrl("https://antizapret.prostovpn.org/proxy.pac");
+//            webClient.getOptions().getProxyConfig().setProxyAutoConfigUrl("https://antizapret.prostovpn.org/proxy.pac");
+            webClient.getOptions().getProxyConfig().setProxyHost("proxy.antizapret.prostovpn.org");
+            webClient.getOptions().getProxyConfig().setProxyPort(3128);
+            webClient.getOptions().getProxyConfig().setSocksProxy(false);
             webClient.getCookieManager().setCookiesEnabled(true);
 
             TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());

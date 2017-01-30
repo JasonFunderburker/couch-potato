@@ -18,12 +18,15 @@ import java.io.*;
  */
 public class LostFilmTypeRetriever extends BaseTypeRetriever {
     private static Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
+    private static final String LOGIN_PAGE = "https://www.lostfilm.tv/login";
 
     @Override
     public TorrentState getState(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
+        logger.debug("source {}", source.asText());
         TorrentState result = new TorrentState();
-        HtmlTableDataCell state =  source.getFirstByXPath("//tr/td[@class='t_episode_num'][number(text())=text()]");
+        HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='movie-parts-list']/tr/td[@class='beta']");
+        logger.debug("state {}", state);
         result.setState(state.asText());
         logger.debug("state: {}, state as text: {}", state, result.getState());
         return result;
@@ -33,9 +36,12 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
         logger.debug("pageWithShowAfterLogin {}", pageAfterLogin.asText());
-        HtmlTableBody tableWithLink = pageAfterLogin.getFirstByXPath("//tbody[tr/td[@class='t_episode_num' and contains(text(),'" + item.getState().getState() + "')]]");
-        logger.debug("tableWithLink: {}", tableWithLink.asText());
-        HtmlPage downloadPage = tableWithLink.getElementsByAttribute("td", "class", "t_episode_title").get(0).click();
+        HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']/tr/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]]");
+        logger.debug("tableDataCell: {}", tableDataCell.asText());
+        HtmlPage pageWithEpisodeInfo = tableDataCell.click();
+        logger.debug("downloadPage: {}", pageWithEpisodeInfo.asText());
+        HtmlDivision div = pageWithEpisodeInfo.getFirstByXPath("//div[@class='external-btn']");
+        HtmlPage downloadPage = div.click();
         logger.debug("downloadPage: {}", downloadPage.asText());
         HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
         if (anchor == null) throw new TorrentRetrieveException("link for '1080p' is not found");
@@ -44,17 +50,15 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
 
     @Override
     public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
-        HtmlPage page1 = webClient.getPage(item.getLink());
-        logger.debug("page before login: {}", page1.asText());
-        HtmlForm form = page1.getForms().get(0);
-        form.getInputByName("login").type(item.getUserInfo().getUserName());
+        HtmlPage loginPage = webClient.getPage(LOGIN_PAGE);
+        logger.debug("loginPage: {}", loginPage.asText());
+        HtmlInput loginInput = loginPage.getElementByName("mail");
+        loginInput.type(item.getUserInfo().getUserName());
         String password = item.getUserInfo().getPassword();
         if (password == null)  throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
-        form.getInputByName("password").type(password);
-        Page page = form.getInputByValue(" Войти ").click();
-        if (page instanceof TextPage) {
-            logger.debug("page after login: {}", ((TextPage) page).getContent());
-            throw new TorrentRetrieveException("Login ERROR: "+ ((TextPage) page).getContent());
-        }
+        HtmlInput passInput = loginPage.getElementByName("pass");
+        passInput.type(password);
+        HtmlInput button = loginPage.getFirstByXPath("//input[@class='primary-btn sign-in-btn' and @type='button']");
+        button.click();
     }
 }
