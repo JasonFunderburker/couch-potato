@@ -75,7 +75,12 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             item.setStatus(TorrentStatus.ERROR);
             item.setErrorText(e.getMessage());
             logger.error("Check item error",e);
+        } catch (Exception e) {
+            item.setStatus(TorrentStatus.ERROR);
+            item.setErrorText("Some unexpected error: "+e.getMessage());
+            logger.error("Unexpected error: "+e);
         }
+
     }
 }
 
