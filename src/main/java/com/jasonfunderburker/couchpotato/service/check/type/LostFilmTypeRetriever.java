@@ -25,7 +25,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         HtmlPage source = webClient.getPage(item.getLink());
         logger.debug("source {}", source.asText());
         TorrentState result = new TorrentState();
-        HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='movie-parts-list']/tr/td[@class='beta']");
+        HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta']");
         logger.debug("state {}", state);
         result.setState(state.asText());
         logger.debug("state: {}, state as text: {}", state, result.getState());
@@ -36,7 +36,8 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
         logger.debug("pageWithShowAfterLogin {}", pageAfterLogin.asText());
-        HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']/tr/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]]");
+        HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]");
+        System.out.println(tableDataCell);
         logger.debug("tableDataCell: {}", tableDataCell.asText());
         HtmlPage pageWithEpisodeInfo = tableDataCell.click();
         logger.debug("downloadPage: {}", pageWithEpisodeInfo.asText());

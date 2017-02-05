@@ -17,7 +17,7 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Ekaterina.Bashkankova on 27.09.2016
+ * Created by JasonFunderburker on 27.09.2016
  */
 @RunWith(MockitoJUnitRunner.class)
 public class NewStudioTypeRetrieverTest {

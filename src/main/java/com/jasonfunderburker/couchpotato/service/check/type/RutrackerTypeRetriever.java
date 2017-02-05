@@ -29,7 +29,7 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
         HtmlPage source = webClient.getPage(item.getLink());
         logger.debug("state source: {}", source.asText());
         TorrentState result = new TorrentState();
-        HtmlSpan state =  source.getFirstByXPath("//span[@title='Когда зарегистрирован']");
+        HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='attach bordered med']//tr[@class='row1']/td[2]");
         if (state != null) {
             result.setState(state.asText().trim());
             logger.debug("state : {}", result.getState());

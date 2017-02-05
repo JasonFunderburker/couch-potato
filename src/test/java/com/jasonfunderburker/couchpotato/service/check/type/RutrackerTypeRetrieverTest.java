@@ -17,7 +17,7 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Ekaterina.Bashkankova on 27.09.2016
+ * Created by JasonFunderburker on 27.09.2016
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RutrackerTypeRetrieverTest {
@@ -33,6 +33,7 @@ public class RutrackerTypeRetrieverTest {
         try (final WebClient webClient = new WebClient()) {
             webClient.getOptions().setJavaScriptEnabled(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setCssEnabled(false);
             checkedPage = webClient.getPage(getClass().getResource("/rutrackerHtmlPageSample.html"));
         }
@@ -45,7 +46,7 @@ public class RutrackerTypeRetrieverTest {
     public void testGetState() throws Exception {
         TorrentState state = retriever.getState(item, webClientMock);
 
-        assertEquals("[ 13-Окт-16 06:59 ]", state.getState());
+        assertEquals("31-Дек-16 15:19", state.getState());
     }
 
     @Test
