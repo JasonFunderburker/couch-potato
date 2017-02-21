@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Ekaterina.Bashkankova on 19.10.2016
+ * Created by JasonFunderburker on 19.10.2016
  */
 @Controller
 @RequestMapping("rss")

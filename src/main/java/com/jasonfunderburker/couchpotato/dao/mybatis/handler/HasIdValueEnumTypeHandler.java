@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Ekaterina.Bashkankova on 16.09.2016
+ * Created by JasonFunderburker on 16.09.2016
  */
 @MappedJdbcTypes(JdbcType.INTEGER)
 public class HasIdValueEnumTypeHandler<E extends Enum<E> & HasIdValue> extends BaseTypeHandler<E> {

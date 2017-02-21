@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Created by Ekaterina.Bashkankova on 27.09.2016
+ * Created by JasonFunderburker on 27.09.2016
  */
 public abstract class BaseTypeRetriever implements TorrentRetriever {
     private static Logger logger = LoggerFactory.getLogger(BaseTypeRetriever.class);

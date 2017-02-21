@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Ekaterina.Bashkankova on 13.09.2016
+ * Created by JasonFunderburker on 13.09.2016
  */
 public class StateRetrieversDictionary {
     private static final Map<TorrentType, TorrentRetriever> retrieverTypeMap;

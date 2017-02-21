@@ -26,12 +26,12 @@ public class ItemListController {
     private static final Logger logger = LoggerFactory.getLogger(ItemListController.class);
     @Autowired
     TorrentsItemService itemService;
-
+/*
     @Autowired
     TaskScheduler scheduler;
 
     private ScheduleSettings scheduleSettings = new ScheduleSettings();
-    private ScheduledFuture scheduledFuture;
+    private ScheduledFuture scheduledFuture; */
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap model) {
@@ -44,7 +44,7 @@ public class ItemListController {
 		model.addAttribute("message", "Hi, I'm couch potato, so i wrote this app cause i want to lay on my soft comfy coach and doing nothing when new episode of my favorite show is coming");
         model.addAttribute("itemList", torrentItemsList);
         model.addAttribute("torrentItem", new TorrentItem());
-        model.addAttribute("scheduleSettings", scheduleSettings);
+//        model.addAttribute("scheduleSettings", scheduleSettings);
 		return "itemList";
 	}
 
@@ -67,7 +67,7 @@ public class ItemListController {
         itemService.deleteItemFromList(id);
         return "redirect:/itemList";
     }
-
+/*
     @RequestMapping(value = "/itemList/check", method = RequestMethod.POST)
     public String itemListStartCheck(ModelMap model) {
         logger.debug("Start check now");
@@ -80,7 +80,7 @@ public class ItemListController {
         logger.debug("Start scheduled check");
         itemService.checkAllItems();
     }
-*/
+*//*
     @RequestMapping(value = "/itemList/scheduleCheck", method = RequestMethod.POST)
     public String itemListScheduleCheck(ScheduleSettings scheduleSettings) {
         if (scheduledFuture != null) {
@@ -93,5 +93,5 @@ public class ItemListController {
         String minutes = timeParts[1];
         scheduledFuture = scheduler.schedule(itemService::checkAllItems, new CronTrigger("0 "+minutes+" "+hours+" * * *"));
         return "redirect:/itemList";
-    }
+    } */
 }

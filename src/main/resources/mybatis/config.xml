@@ -6,13 +6,15 @@
 
 <configuration>
     <typeAliases>
+        <typeAlias type="com.jasonfunderburker.couchpotato.domain.TorrentStatus" alias="TorrentStatus"/>
+        <typeAlias type="com.jasonfunderburker.couchpotato.domain.TorrentType" alias="TorrentType"/>
         <package name="com.jasonfunderburker.couchpotato.domain"/>
         <package name="com.jasonfunderburker.couchpotato.dao.mybatis.handler"/>
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler handler="TorrentStatusEnumTypeHandler" javaType="TorrentStatus"/>
-        <typeHandler handler="TorrentTypeEnumTypeHandler" javaType="TorrentType"/>
+        <typeHandler handler="TorrentStatusEnumTypeHandler" javaType="com.jasonfunderburker.couchpotato.domain.TorrentStatus"/>
+        <typeHandler handler="TorrentTypeEnumTypeHandler" javaType="com.jasonfunderburker.couchpotato.domain.TorrentType"/>
     </typeHandlers>
 
     <mappers>

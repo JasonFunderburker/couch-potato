@@ -4,13 +4,17 @@ import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import com.jasonfunderburker.couchpotato.mapper.TorrentItemMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
  */
+@Component
 public class MyBatisTorrentItemDao implements TorrentItemDao {
+    @Autowired
     TorrentItemMapper mapper;
 
     @Override

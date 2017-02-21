@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Created by Ekaterina.Bashkankova on 27.09.2016
+ * Created by JasonFunderburker on 27.09.2016
  */
 public class NNMClubTypeRetriever extends BaseTypeRetriever {
     private static Logger logger = LoggerFactory.getLogger(NNMClubTypeRetriever.class);

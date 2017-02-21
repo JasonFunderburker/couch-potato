@@ -3,8 +3,12 @@ package com.jasonfunderburker.couchpotato.dao.mybatis;
 import com.jasonfunderburker.couchpotato.dao.AccountsDao;
 import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.mapper.AccountsMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MyBatisAccountsDao implements AccountsDao {
+    @Autowired
     AccountsMapper mapper;
 
     @Override

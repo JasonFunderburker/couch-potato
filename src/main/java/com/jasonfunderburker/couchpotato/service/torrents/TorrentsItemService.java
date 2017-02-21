@@ -6,7 +6,7 @@ import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import java.util.List;
 
 /**
- * Created by Ekaterina.Bashkankova on 01.09.2016
+ * Created by JasonFunderburker on 01.09.2016
  */
 
 public interface TorrentsItemService {

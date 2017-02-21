@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by Ekaterina.Bashkankova on 30.09.2016
+ * Created by JasonFunderburker on 30.09.2016
  */
 @Controller
 @RequestMapping("checkResults/download")

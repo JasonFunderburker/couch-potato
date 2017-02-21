@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Couch Potato</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-    <link rel="stylesheet" href="../../resources/css/main.css" th:href="@{/resources/css/main.css}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+    <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
 </head>
 <body>
 	<h1 th:text="${message}">Some message</h1>
@@ -13,11 +13,11 @@
     <form class="box" th:action="@{/itemList/check}" method="post">
         <button class="button" type="submit">Check now</button>
     </form>
-    <form class="box" th:action="@{/itemList/scheduleCheck}" th:object="${scheduleSettings}" method="post">
+ <!--   <form class="box" th:action="@{/itemList/scheduleCheck}" th:object="${scheduleSettings}" method="post">
         <span th:text="'Schedule check torrents list every day at ' + (*{scheduleTime} != null ? *{scheduleTime} : '')">Schedule check torrents list every day at</span>
         <input type="time" th:field="*{scheduleTime}"/>
         <button class="button" type="submit">Save</button>
-    </form>
+    </form> -->
     <div id="popup1" class="overlay">
         <div class="popup">
             <h2>Add new item to list</h2>

@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Settings</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-    <link rel="stylesheet" href="../../resources/css/main.css" th:href="@{/resources/css/main.css}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+    <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
 </head>
 <body>
     <table class="item-table">
@@ -17,11 +17,11 @@
                     <div>
                         <label>UserName</label>
                     </div>
-                    <input type="text" th:field="*{userName}">
+                    <input type="text" th:field="*{userName}"/>
                     <div>
                         <label>Password</label>
                     </div>
-                    <input type="password" th:field="*{hash}">
+                    <input type="password" th:field="*{hash}"/>
                     <button type="submit" class="button">Save</button>
                 </form>
             </td>
