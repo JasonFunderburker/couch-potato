@@ -13,11 +13,11 @@
     <form class="box" th:action="@{/itemList/check}" method="post">
         <button class="button" type="submit">Check now</button>
     </form>
- <!--   <form class="box" th:action="@{/itemList/scheduleCheck}" th:object="${scheduleSettings}" method="post">
+   <form class="box" th:action="@{/itemList/scheduleCheck}" th:object="${scheduleSettings}" method="post">
         <span th:text="'Schedule check torrents list every day at ' + (*{scheduleTime} != null ? *{scheduleTime} : '')">Schedule check torrents list every day at</span>
         <input type="time" th:field="*{scheduleTime}"/>
         <button class="button" type="submit">Save</button>
-    </form> -->
+    </form>
     <div id="popup1" class="overlay">
         <div class="popup">
             <h2>Add new item to list</h2>
