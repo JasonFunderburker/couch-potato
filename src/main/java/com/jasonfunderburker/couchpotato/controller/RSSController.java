@@ -37,7 +37,7 @@ public class RSSController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String generateRss(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void generateRss(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<TorrentItem> downloadedTorrents = itemService.findByStatus(TorrentStatus.DOWNLOADED);
         logger.debug("downloadedTorrents: {}", downloadedTorrents);
         RSSFeed rssFeed = feedGeneratorService.generateFor(downloadedTorrents, getDownloadPathPrefix(request));
@@ -45,7 +45,7 @@ public class RSSController {
         String rssAsString = objectMapper.writeValueAsString(rssFeed);
         response.setContentType("application/rss+xml");
         IOUtils.write(rssAsString, response.getOutputStream(), "windows-1251");
-        return "";
+        response.getOutputStream().close();
     }
 
     private String getDownloadPathPrefix(HttpServletRequest request) {
