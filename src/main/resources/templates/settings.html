@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
 </head>
 <body>
+    <div align="right">
+        <a href="itemList.html" th:href="@{/itemList}">Back</a>
+        <a href="login.html" th:href="@{/logout}">Logout</a>
+    </div>
     <table class="item-table">
     <tbody>
         <tr th:each="torrentType: ${torrentTypes}">

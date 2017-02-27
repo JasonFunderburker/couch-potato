@@ -9,6 +9,7 @@
 	<h1 th:text="${message}">Some message</h1>
     <div align="right">
         <a href="settings.html" th:href="@{/settings}">Settings</a>
+        <a href="login.html" th:href="@{/logout}">Logout</a>
     </div>
     <form class="box" th:action="@{/itemList/check}" method="post">
         <button class="button" type="submit">Check now</button>
