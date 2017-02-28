@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Login page</title>
+    <title>Sing Up</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
     <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}"/>
 </head>
@@ -10,16 +10,9 @@
 <div class="login">
     <div class="login-screen">
         <div class="app-title">
-            <h1>Login</h1>
+            <h1>Sing Up</h1>
         </div>
-        <div class="app-title" th:if="${param.error}">
-            Invalid username and password.
-        </div>
-        <div class="app-title" th:if="${param.logout}">
-            You have been logged out.
-        </div>
-
-        <form class="login-form" th:action="@{/login}" method="post">
+        <form class="login-form" th:action="@{/register}" method="post">
             <div class="control-group">
                 <input type="text" class="login-field" value="" name="username" placeholder="username" id="login-name"/>
                 <label class="login-field-icon fui-user" for="login-name"></label>
@@ -30,11 +23,8 @@
                 <label class="login-field-icon fui-lock" for="login-pass"></label>
             </div>
 
-            <input class="btn btn-primary btn-large btn-block" value="Login" type="submit"/>
+            <input class="btn btn-primary btn-large btn-block" value="Sing Up" type="submit"/>
         </form>
-        <div class="app-title" th:unless="${registered}">
-            <a href="register.html" th:href="@{/register}">Create an account</a>
-        </div>
     </div>
 </div>
 </body>

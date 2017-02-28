@@ -1,7 +1,9 @@
 package com.jasonfunderburker.couchpotato;
 
+import com.jasonfunderburker.couchpotato.security.SingleUserDetailsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
@@ -25,13 +26,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Value("${couch-potato.username}")
-    private String userName;
-
-    @Value("${couch-potato.password}")
-    private String password;
-
     @Autowired
     private DataSource dataSource;
 
@@ -39,12 +33,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/css/**").permitAll()
+                    .antMatchers("/css/**", "/register").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin().failureUrl("/login?error")
                     .loginPage("/login")
-                    .defaultSuccessUrl("/itemList")
+                    .defaultSuccessUrl("/")
                     .permitAll()
                     .and()
                 .logout()
@@ -55,19 +49,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager();
-        userDetailsManager.setDataSource(dataSource);
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        auth.userDetailsService(userDetailsManager).passwordEncoder(encoder);
+        auth.userDetailsService(userDetailsManager()).passwordEncoder(new BCryptPasswordEncoder());
         auth.jdbcAuthentication().dataSource(dataSource);
+    }
 
-        if (!userDetailsManager.userExists(userName)) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("USER"));
-            User user = new User(userName, encoder.encode(password), authorities);
-
-            userDetailsManager.createUser(user);
-        }
+    @Bean
+    public SingleUserDetailsManager userDetailsManager() {
+        SingleUserDetailsManager userDetailsManager = new SingleUserDetailsManager();
+        userDetailsManager.setDataSource(dataSource);
+        return userDetailsManager;
     }
 }
