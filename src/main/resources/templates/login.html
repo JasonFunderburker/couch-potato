@@ -19,19 +19,19 @@
             You have been logged out.
         </div>
 
-        <div class="login-form" th:action="@{/login}" method="post">
+        <form class="login-form" th:action="@{/login}" method="post">
             <div class="control-group">
                 <input type="text" class="login-field" value="" name="username" placeholder="username" id="login-name"/>
                 <label class="login-field-icon fui-user" for="login-name"></label>
             </div>
 
             <div class="control-group">
-                <input type="password" class="login-field" value="" placeholder="password" id="login-pass"/>
+                <input type="password" class="login-field" value="" name="password" placeholder="password" id="login-pass"/>
                 <label class="login-field-icon fui-lock" for="login-pass"></label>
             </div>
 
-            <input class="btn btn-primary btn-large btn-block" type="submit" value="Login"/>
-        </div>
+            <input class="btn btn-primary btn-large btn-block" value="Login" type="submit"/>
+        </form>
     </div>
 </div>
 </body>
