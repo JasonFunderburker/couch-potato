@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created on 28.02.2017
@@ -25,13 +24,19 @@ import java.util.Arrays;
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    PasswordEncoder encoder = new BCryptPasswordEncoder();
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private final SingleUserDetailsManager userDetails;
 
     @Autowired
-    private SingleUserDetailsManager userDetails;
+    public RegisterController(SingleUserDetailsManager userDetails) {
+        this.userDetails = userDetails;
+    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerPage(ModelMap model) {
+        if (userDetails.anyUserExist())
+            return "redirect:/login";
         model.addAttribute("username", "");
         model.addAttribute("password", "");
         return "register";
@@ -39,8 +44,10 @@ public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(String username, String password) {
-        userDetails.createUser(new User(username, encoder.encode(password), Arrays.asList(new SimpleGrantedAuthority("USER"))));
-        logger.debug("User created: {}",username);
+        if (!userDetails.anyUserExist()) {
+            userDetails.createUser(new User(username, encoder.encode(password), Collections.singletonList(new SimpleGrantedAuthority("USER"))));
+            logger.debug("User created: {}", username);
+        }
         return "redirect:/login";
     }
 }

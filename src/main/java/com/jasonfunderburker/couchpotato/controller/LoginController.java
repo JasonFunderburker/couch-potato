@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
+    private final SingleUserDetailsManager userDetails;
+
     @Autowired
-    private SingleUserDetailsManager userDetails;
+    public LoginController(SingleUserDetailsManager userDetails) {
+        this.userDetails = userDetails;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(ModelMap model) {
