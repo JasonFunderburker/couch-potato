@@ -36,6 +36,20 @@
             </form>
         </div>
     </div>
+    <div id="rssGeneratePopup" class="overlay">
+        <div class="popup2">
+            <a class="close" href="#" th:href="@{#}">x</a>
+            <h2>Generated public RSS URL</h2>
+            <label>WARNING!Everyone who got this link has access to rss page</label>
+            <div>
+                <input class="widthInput" readonly="readonly" th:value="${generatedRssUrl}" onclick="this.select();"></input>
+            </div>
+        </div>
+    </div>
+    <div>
+        <label>Get Public RSS URL</label>
+        <a class="button" href="#rssGeneratePopup" th:href="@{/rss/public}">Generate</a>
+    </div>
     <h1 th:text="${errorMessage}" class="error">Some message</h1>
     <table class="item-table">
         <thead>

@@ -19,14 +19,18 @@ import java.util.concurrent.ScheduledFuture;
 @RequestMapping("/")
 public class ItemListController {
     private static final Logger logger = LoggerFactory.getLogger(ItemListController.class);
-    @Autowired
-    TorrentsItemService itemService;
 
-    @Autowired
-    TaskScheduler scheduler;
+    private final TorrentsItemService itemService;
+    private final TaskScheduler scheduler;
 
     private ScheduleSettings scheduleSettings = new ScheduleSettings();
     private ScheduledFuture scheduledFuture;
+
+    @Autowired
+    public ItemListController(TorrentsItemService itemService, TaskScheduler scheduler) {
+        this.itemService = itemService;
+        this.scheduler = scheduler;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap model) {
@@ -40,6 +44,8 @@ public class ItemListController {
         model.addAttribute("itemList", torrentItemsList);
         model.addAttribute("torrentItem", new TorrentItem());
         model.addAttribute("scheduleSettings", scheduleSettings);
+        if (!model.containsAttribute("generatedRssUrl")) model.addAttribute("generatedRssUrl","");
+        logger.debug("modelMap: {}",model);
 		return "itemList";
 	}
 

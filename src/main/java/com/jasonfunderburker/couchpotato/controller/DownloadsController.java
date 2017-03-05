@@ -24,12 +24,16 @@ import java.net.URL;
 public class DownloadsController {
     private static final Logger logger = LoggerFactory.getLogger(DownloadsController.class);
 
-    @Autowired
-    ServletContext context;
+    private final ServletContext context;
     /**
      * Path of the file to be downloaded, relative to application's directory
      */
     private String filePath = File.separator + "downloads"+ File.separator;
+
+    @Autowired
+    public DownloadsController(ServletContext context) {
+        this.context = context;
+    }
 
     /**
      * Method for handling file download request from client

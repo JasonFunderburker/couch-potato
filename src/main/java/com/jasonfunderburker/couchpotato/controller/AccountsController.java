@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AccountsController {
     private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
+
+    private final TorrentsAccountsService accountsService;
+
     @Autowired
-    TorrentsAccountsService accountsService;
+    public AccountsController(TorrentsAccountsService accountsService) {
+        this.accountsService = accountsService;
+    }
 
     @RequestMapping(value = "/torrentType/{id}/account", method = RequestMethod.POST)
     public String addTorrentAccount(@PathVariable("id")long id, TorrentUserInfo userInfo, ModelMap model) {

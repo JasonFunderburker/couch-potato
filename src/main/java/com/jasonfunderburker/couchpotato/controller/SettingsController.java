@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/settings")
 public class SettingsController {
     private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
+
+    private final TorrentsAccountsService accountsService;
+
     @Autowired
-    TorrentsAccountsService accountsService;
+    public SettingsController(TorrentsAccountsService accountsService) {
+        this.accountsService = accountsService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String getSettings(ModelMap model) {
