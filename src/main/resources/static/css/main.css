@@ -7,26 +7,26 @@ body {
     border: 0.2em solid #175c39;
 }
 
-td {
+.item-table td {
     border: 0.2em solid #175c39;
     text-align: center;
     width: 10em;
     padding: 1em; 		}
 
-th {
+.item-table th {
     border: 0.2em solid #175c39;
     text-align: center;
     padding: 1em;
     background-color: rgba(35, 139, 87, 0.96);	     /* added a red background color to the heading cells  */
     color: white;		}			      /* added a white font color to the heading text */
 
-tr {
+.item-table tr {
     height: 1em;	}
 
-table tr:nth-child(even) {		      /* added all even rows a #eee color  */
+.item-table tr:nth-child(even) {		      /* added all even rows a #eee color  */
     background-color: #cdeec8;		}
 
-table tr:nth-child(odd) {		     /* added all odd rows a #fff color  */
+.item-table tr:nth-child(odd) {		     /* added all odd rows a #fff color  */
     background-color:#fff;		}
 
 .box {

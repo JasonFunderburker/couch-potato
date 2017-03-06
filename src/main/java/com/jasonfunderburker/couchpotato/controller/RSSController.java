@@ -74,8 +74,10 @@ public class RSSController {
     }
 
     @RequestMapping(value = "/public/invalidate", method = RequestMethod.POST)
-    public void invalidatePublicRssUrl() {
+    public String invalidatePublicRssUrl(RedirectAttributes redirectAttributes) {
         userDetails.saveRssPublicString(getUserName(), null);
+        redirectAttributes.addFlashAttribute("invalidateResult","successfully invalidated");
+        return "redirect:/itemList";
     }
 
     private void generateRssContent(HttpServletRequest request, HttpServletResponse response) throws IOException {
