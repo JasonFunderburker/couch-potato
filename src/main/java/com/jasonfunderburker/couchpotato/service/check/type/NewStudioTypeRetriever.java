@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created by JasonFunderburker on 25.10.2016
  */
 public class NewStudioTypeRetriever extends BaseTypeRetriever {
-    private static Logger logger = LoggerFactory.getLogger(NewStudioTypeRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(NewStudioTypeRetriever.class);
 
     @Override
     public String getName(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {

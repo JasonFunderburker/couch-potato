@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created by JasonFunderburker on 27.09.2016
  */
 public class NNMClubTypeRetriever extends BaseTypeRetriever {
-    private static Logger logger = LoggerFactory.getLogger(NNMClubTypeRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(NNMClubTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://nnmclub.to/forum/login.php";
 
     @Override

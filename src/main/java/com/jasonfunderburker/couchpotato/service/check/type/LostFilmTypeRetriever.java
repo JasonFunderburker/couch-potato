@@ -1,16 +1,12 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
 
@@ -18,7 +14,7 @@ import java.io.*;
  * Created by JasonFunderburker on 07.09.2016
  */
 public class LostFilmTypeRetriever extends BaseTypeRetriever {
-    private static Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://www.lostfilm.tv/login";
 
     @Override
