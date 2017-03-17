@@ -9,6 +9,7 @@ import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 
@@ -16,7 +17,13 @@ import java.io.IOException;
  * Created by JasonFunderburker on 25.10.2016
  */
 public class RutrackerTypeRetriever extends BaseTypeRetriever {
-    private static Logger logger = LoggerFactory.getLogger(RutrackerTypeRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(RutrackerTypeRetriever.class);
+
+    @Value("${rutracker.proxyconfig.proxyHost}")
+    public static String proxyHost;
+
+    @Value("${rutracker.proxyconfig.proxyHost}")
+    public static Integer proxyPort;
 
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {

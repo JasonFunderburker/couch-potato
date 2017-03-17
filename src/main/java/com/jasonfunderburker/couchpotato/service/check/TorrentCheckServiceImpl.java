@@ -21,7 +21,7 @@ import static com.jasonfunderburker.couchpotato.domain.TorrentStatus.*;
  */
 @Service
 public class TorrentCheckServiceImpl implements TorrentCheckService {
-    private static Logger logger = LoggerFactory.getLogger(TorrentCheckServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TorrentCheckServiceImpl.class);
 
     @Override
     public void check(TorrentItem item) {
@@ -33,13 +33,14 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             webClient.getOptions().setUseInsecureSSL(true);
             webClient.getOptions().setRedirectEnabled(true);
 //            webClient.getOptions().getProxyConfig().setProxyAutoConfigUrl("https://antizapret.prostovpn.org/proxy.pac");
-            webClient.getOptions().getProxyConfig().setProxyHost("proxy.antizapret.prostovpn.org");
-            webClient.getOptions().getProxyConfig().setProxyPort(3128);
-            webClient.getOptions().getProxyConfig().setSocksProxy(false);
             webClient.getCookieManager().setCookiesEnabled(true);
 
             TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
             if (torrentRetriever != null) {
+                if (torrentRetriever.getProxyConfig() != null) {
+                    webClient.getOptions().setProxyConfig(torrentRetriever.getProxyConfig());
+                    logger.debug("using proxy config: host={}, port={}", torrentRetriever.getProxyConfig().getProxyHost(), torrentRetriever.getProxyConfig().getProxyPort());
+                }
                 torrentRetriever.login(item, webClient);
                 TorrentState newState = torrentRetriever.getState(item, webClient);
                 if (item.getState() == null) {
@@ -71,15 +72,15 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
         } catch (IOException | FailingHttpStatusCodeException e) {
             item.setStatus(ERROR);
             item.setErrorText("Can't read response from url: " + item.getLink() + ", cause: " + e.getMessage());
-            logger.error("Error create url from item link: "+item.getLink(), e);
+            logger.error("Can't read response from url: "+item.getLink(), e);
         } catch (TorrentRetrieveException e) {
             item.setStatus(ERROR);
             item.setErrorText(e.getMessage());
-            logger.error("Check item error",e);
+            logger.error("Check item error: ",e);
         } catch (Exception e) {
             item.setStatus(ERROR);
             item.setErrorText("Some unexpected error: "+e.getMessage());
-            logger.error("Unexpected error: "+e);
+            logger.error("Unexpected error: ", e);
         }
 
     }

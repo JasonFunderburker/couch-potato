@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
@@ -20,4 +20,6 @@ public interface TorrentRetriever {
     String download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
     void login(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
+
+    ProxyConfig getProxyConfig();
 }

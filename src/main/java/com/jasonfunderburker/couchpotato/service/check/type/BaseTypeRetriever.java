@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -19,7 +20,10 @@ import java.net.URL;
  * Created by JasonFunderburker on 27.09.2016
  */
 public abstract class BaseTypeRetriever implements TorrentRetriever {
-    private static Logger logger = LoggerFactory.getLogger(BaseTypeRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseTypeRetriever.class);
+    private static ProxyConfig proxyConfig;
+    public static String proxyHost;
+    public static Integer proxyPort;
 
     @Override
     public String getName(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
@@ -42,11 +46,18 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
             IOUtils.copy(inputStream, outputStream);
             inputStream.close();
             outputStream.close();
-            
+
         }
         return fileName;
     }
 
     public abstract HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
+    @Override
+    public ProxyConfig getProxyConfig() {
+        if (proxyConfig == null && proxyHost != null && proxyPort != null) {
+            proxyConfig = new ProxyConfig(proxyHost, proxyPort, false);
+        }
+        return proxyConfig;
+    }
 }
