@@ -7,12 +7,14 @@ import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 
 /**
  * Created by JasonFunderburker on 07.09.2016
  */
+@Service
 public class LostFilmTypeRetriever extends BaseTypeRetriever {
     private static final Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://www.lostfilm.tv/login";
@@ -20,7 +22,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     @Override
     public TorrentState getState(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
-        logger.debug("source {}", source.asText());
+        logger.trace("source {}", source.asText());
         TorrentState result = new TorrentState();
         HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta']");
         logger.debug("state {}", state);
@@ -32,15 +34,14 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
-        logger.debug("pageWithShowAfterLogin {}", pageAfterLogin.asText());
+        logger.trace("pageWithShowAfterLogin {}", pageAfterLogin.asText());
         HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]");
-        System.out.println(tableDataCell);
         logger.debug("tableDataCell: {}", tableDataCell.asText());
         HtmlPage pageWithEpisodeInfo = tableDataCell.click();
-        logger.debug("downloadPage: {}", pageWithEpisodeInfo.asText());
+        logger.trace("pageWithEpisodeInfo: {}", pageWithEpisodeInfo.asText());
         HtmlDivision div = pageWithEpisodeInfo.getFirstByXPath("//div[@class='external-btn']");
         HtmlPage downloadPage = div.click();
-        logger.debug("downloadPage: {}", downloadPage.asText());
+        logger.trace("downloadPage: {}", downloadPage.asText());
         HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
         if (anchor == null) throw new TorrentRetrieveException("link for '1080p' is not found");
         return anchor;
@@ -49,7 +50,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     @Override
     public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage loginPage = webClient.getPage(LOGIN_PAGE);
-        logger.debug("loginPage: {}", loginPage.asText());
+        logger.trace("loginPage: {}", loginPage.asText());
         HtmlInput loginInput = loginPage.getElementByName("mail");
         loginInput.type(item.getUserInfo().getUserName());
         String password = item.getUserInfo().getPassword();

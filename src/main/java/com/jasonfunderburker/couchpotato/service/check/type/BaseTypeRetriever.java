@@ -21,9 +21,6 @@ import java.net.URL;
  */
 public abstract class BaseTypeRetriever implements TorrentRetriever {
     private static final Logger logger = LoggerFactory.getLogger(BaseTypeRetriever.class);
-    private static ProxyConfig proxyConfig;
-    public static String proxyHost;
-    public static Integer proxyPort;
 
     @Override
     public String getName(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
@@ -55,9 +52,6 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
 
     @Override
     public ProxyConfig getProxyConfig() {
-        if (proxyConfig == null && proxyHost != null && proxyPort != null) {
-            proxyConfig = new ProxyConfig(proxyHost, proxyPort, false);
-        }
-        return proxyConfig;
+        return null;
     }
 }

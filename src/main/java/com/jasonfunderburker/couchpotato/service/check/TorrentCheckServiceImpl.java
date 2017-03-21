@@ -9,6 +9,7 @@ import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDicti
 import com.jasonfunderburker.couchpotato.service.check.type.TorrentRetriever;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,6 +24,9 @@ import static com.jasonfunderburker.couchpotato.domain.TorrentStatus.*;
 public class TorrentCheckServiceImpl implements TorrentCheckService {
     private static final Logger logger = LoggerFactory.getLogger(TorrentCheckServiceImpl.class);
 
+    @Autowired
+    private StateRetrieversDictionary stateRetrieversDictionary;
+
     @Override
     public void check(TorrentItem item) {
         logger.debug("check item: {}", item);
@@ -32,10 +36,9 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setUseInsecureSSL(true);
             webClient.getOptions().setRedirectEnabled(true);
-//            webClient.getOptions().getProxyConfig().setProxyAutoConfigUrl("https://antizapret.prostovpn.org/proxy.pac");
             webClient.getCookieManager().setCookiesEnabled(true);
 
-            TorrentRetriever torrentRetriever = StateRetrieversDictionary.getRetrieverType(item.getType());
+            TorrentRetriever torrentRetriever = stateRetrieversDictionary.getRetrieverType(item.getType());
             if (torrentRetriever != null) {
                 if (torrentRetriever.getProxyConfig() != null) {
                     webClient.getOptions().setProxyConfig(torrentRetriever.getProxyConfig());

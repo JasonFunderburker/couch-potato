@@ -28,6 +28,8 @@
         <appender-ref ref="FILE-APPENDER" />
     </logger>
 
+    <logger name="com.gargoylesoftware.htmlunit.javascript.DefaultJavaScriptErrorListener" level="OFF"/>
+
     <root level="ERROR">
         <appender-ref ref="FILE-APPENDER" />
     </root>
