@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 
 import java.io.IOException;
@@ -22,4 +23,6 @@ public interface TorrentRetriever {
     void login(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
     ProxyConfig getProxyConfig();
+
+    TorrentType getTorrentType();
 }

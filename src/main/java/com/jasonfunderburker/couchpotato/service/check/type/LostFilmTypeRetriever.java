@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,5 +60,10 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         passInput.type(password);
         HtmlInput button = loginPage.getFirstByXPath("//input[@class='primary-btn sign-in-btn' and @type='button']");
         button.click();
+    }
+
+    @Override
+    public TorrentType getTorrentType() {
+        return TorrentType.LOST_FILM;
     }
 }

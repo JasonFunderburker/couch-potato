@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,21 +15,10 @@ import java.util.Map;
 @Repository
 public class StateRetrieversDictionary {
     private final Map<TorrentType, TorrentRetriever> retrieverTypeMap;
-    @Autowired
-    private LostFilmTypeRetriever lostFilmTypeRetriever;
-    @Autowired
-    private NNMClubTypeRetriever nnmClubTypeRetriever;
-    @Autowired
-    private RutrackerTypeRetriever rutrackerTypeRetriever;
-    @Autowired
-    private NewStudioTypeRetriever newStudioTypeRetriever;
 
-    public StateRetrieversDictionary() {
+    public StateRetrieversDictionary(List<TorrentRetriever> torrentRetrieverList) {
         Map<TorrentType, TorrentRetriever> map = new HashMap<>();
-        map.put(TorrentType.LOST_FILM, lostFilmTypeRetriever);
-        map.put(TorrentType.NNM_CLUB, nnmClubTypeRetriever);
-        map.put(TorrentType.RUTRACKER, rutrackerTypeRetriever);
-        map.put(TorrentType.NEW_STUDIO, newStudioTypeRetriever);
+        torrentRetrieverList.forEach(t -> map.put(t.getTorrentType(), t));
         retrieverTypeMap = Collections.unmodifiableMap(map);
     }
 

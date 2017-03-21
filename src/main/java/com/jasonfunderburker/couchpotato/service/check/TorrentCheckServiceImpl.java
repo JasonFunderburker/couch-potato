@@ -66,7 +66,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                 }
             } else {
                 item.setStatus(ERROR);
-                item.setErrorText("Unsupported torrent type: " + item.getType().getName());
+                item.setErrorText("TorrentRetriever for type=" + item.getType().getName() + " is not found");
             }
         } catch (MalformedURLException e) {
             item.setStatus(ERROR);

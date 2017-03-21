@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,5 +59,10 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         }
         logger.trace("page: {}", page instanceof HtmlPage ? ((HtmlPage) page).asText() : "");
+    }
+
+    @Override
+    public TorrentType getTorrentType() {
+        return TorrentType.NNM_CLUB;
     }
 }
