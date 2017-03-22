@@ -1,11 +1,15 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +25,11 @@ import java.util.Optional;
 public class LostFilmTypeRetriever extends BaseTypeRetriever {
     private static final Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://www.lostfilm.tv/login";
+    private final XmlMapper mapper = new XmlMapper();
+
+    public LostFilmTypeRetriever() {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     @Override
     public TorrentState getState(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
@@ -30,16 +39,16 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         } else {
             XmlPage rssPage = webClient.getPage("http://www.lostfilm.tv/rss.xml");
             logger.trace("Rss page content={}", rssPage.asXml());
-            DomNodeList<DomElement> elements = rssPage.getElementsByTagName("item");
-            logger.trace("elements={}", elements);
-            Optional<DomElement> element = elements.stream()
-                    .peek(t -> logger.debug("element={}, getAttributeNodeLinkValue={}", t, t.getAttributeNode("link").getNodeValue()))
-                    .filter(e -> e.getAttributeNode("link").getNodeValue().contains(item.getLink()))
+            RSSFeed rss = mapper.readValue(rssPage.asXml(), RSSFeed.class);
+            Optional<RSSFeedMessage> rssItem = rss.getChannel().getEntries().stream()
+                    .peek(e -> logger.trace("rss item = {}",e))
+                    .filter(t -> t.getLink().contains(item.getLink()))
                     .findFirst();
-            if (element.isPresent()) {
+            if (rssItem.isPresent()) {
+                logger.debug("rssItem is found = {}", rssItem);
                 result = new TorrentState();
-                result.setState(element.get().getAttributeNode("link").getNodeValue().replace(item.getLink(), "").trim());
-                result.setInfo(element.get().getAttributeNode("title").getNodeValue());
+                result.setState(rssItem.get().getLink().replace(item.getLink(), "").trim());
+                result.setInfo(rssItem.get().getTitle().trim());
             } else {
                 logger.debug("Rss feed don't contain info about {}", item.getLink());
                 result = item.getState();
@@ -57,7 +66,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         HtmlTableDataCell state = source.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta']");
         logger.debug("state {}", state);
         String stateString = state.getAttribute("onClick");
-        result.setState(stateString.substring(stateString.indexOf("season"), stateString.lastIndexOf("'")));
+        result.setState(stateString.substring(stateString.indexOf("/season"), stateString.lastIndexOf("'"))+"/");
         logger.debug("state: {}, state as text: {}", state, result.getState());
         return result;
     }
@@ -65,11 +74,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         webClient.getOptions().setJavaScriptEnabled(true);
-        HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
-        logger.trace("pageWithShowAfterLogin {}", pageAfterLogin.asText());
-        HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]");
-        logger.debug("tableDataCell: {}", tableDataCell.asText());
-        HtmlPage pageWithEpisodeInfo = tableDataCell.click();
+        HtmlPage pageWithEpisodeInfo = webClient.getPage(item.getLink()+item.getState().getState());
         logger.trace("pageWithEpisodeInfo: {}", pageWithEpisodeInfo.asText());
         HtmlDivision div = pageWithEpisodeInfo.getFirstByXPath("//div[@class='external-btn']");
         logger.debug("div with click: {}", div.asText());

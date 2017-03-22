@@ -1,8 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import org.junit.Before;
@@ -11,8 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -29,23 +27,27 @@ public class LostFilmTypeRetrieverTest {
 
     @Before
     public void before() throws Exception {
-        HtmlPage checkedPage;
-        try (final WebClient webClient = new WebClient()) {
-            webClient.getOptions().setJavaScriptEnabled(false);
-            webClient.getOptions().setThrowExceptionOnScriptError(false);
-            webClient.getOptions().setCssEnabled(false);
-            checkedPage = webClient.getPage(getClass().getResource("/lostfilmHtmlPageSample.html"));
-        }
-        when(webClientMock.getPage(anyString())).thenReturn(checkedPage);
         item.setLink("someLink");
     }
 
 
     @Test
-    public void testGetState() throws Exception {
+    public void testGetInitialState() throws Exception {
+        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostfilmHtmlPageSample.html"));
         TorrentState state = retriever.getState(item, webClientMock);
 
-        assertEquals("4 сезон 9 серия", state.getState());
+        assertEquals("/season_4/episode_9/", state.getState());
+    }
+
+    @Test
+    public void testGetState() throws Exception {
+        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostFilmRssPageSample.xml"));
+        TorrentState oldState = new TorrentState("someLink");
+        item.setState(oldState);
+        TorrentState state = retriever.getState(item, webClientMock);
+
+        assertEquals("/season_7/episode_14/", state.getState());
+        assertNotNull(state.getInfo());
     }
 
 /*    @Test
@@ -54,4 +56,13 @@ public class LostFilmTypeRetrieverTest {
         HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
     }
     */
+
+    private Page preparePage(String resourceString) throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            webClient.getOptions().setJavaScriptEnabled(false);
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setCssEnabled(false);
+            return webClient.getPage(getClass().getResource(resourceString));
+        }
+    }
 }
