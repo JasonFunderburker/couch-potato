@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
@@ -34,6 +35,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
 
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
+        webClient.getOptions().setJavaScriptEnabled(true);
         HtmlPage pageAfterLogin = webClient.getPage(item.getLink());
         logger.trace("pageWithShowAfterLogin {}", pageAfterLogin.asText());
         HtmlTableDataCell tableDataCell = pageAfterLogin.getFirstByXPath("//table[@class='movie-parts-list']//tr[not(@class='not-available')]/td[@class='beta' and contains(text(),'" + item.getState().getState() + "')]");
@@ -41,9 +43,12 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         HtmlPage pageWithEpisodeInfo = tableDataCell.click();
         logger.trace("pageWithEpisodeInfo: {}", pageWithEpisodeInfo.asText());
         HtmlDivision div = pageWithEpisodeInfo.getFirstByXPath("//div[@class='external-btn']");
+        logger.debug("div with click: {}", div.asText());
         HtmlPage downloadPage = div.click();
+        logger.trace("downloadTitle: {}", downloadPage.getTitleText());
         logger.trace("downloadPage: {}", downloadPage.asText());
         HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
+        webClient.getOptions().setJavaScriptEnabled(false);
         if (anchor == null) throw new TorrentRetrieveException("link for '1080p' is not found");
         return anchor;
     }

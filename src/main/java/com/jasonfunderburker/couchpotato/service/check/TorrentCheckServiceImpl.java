@@ -31,7 +31,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
     public void check(TorrentItem item) {
         logger.debug("check item: {}", item);
         try (final WebClient webClient = new WebClient()) {
-            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.getOptions().setJavaScriptEnabled(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setUseInsecureSSL(true);
