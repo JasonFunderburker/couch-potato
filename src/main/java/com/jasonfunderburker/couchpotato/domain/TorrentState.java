@@ -5,6 +5,7 @@ package com.jasonfunderburker.couchpotato.domain;
  */
 public class TorrentState {
     private String state;
+    private String info;
 
     public String getState() {
         return state;
@@ -12,6 +13,14 @@ public class TorrentState {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public TorrentState() {
@@ -43,6 +52,7 @@ public class TorrentState {
     public String toString() {
         return "TorrentState{" +
                 "state='" + state + '\'' +
+                ", info='" + info + '\'' +
                 '}';
     }
 }
