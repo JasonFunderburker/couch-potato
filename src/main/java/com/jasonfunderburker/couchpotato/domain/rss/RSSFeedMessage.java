@@ -1,5 +1,7 @@
 package com.jasonfunderburker.couchpotato.domain.rss;
 
+import java.util.Date;
+
 /**
  * Created by JasonFunderburker on 19.10.2016
  */
@@ -11,6 +13,8 @@ public class RSSFeedMessage {
     String title;
     String description;
     String link;
+    Date pubDate;
+    String guid;
 
     public String getTitle() {
         return title;
@@ -36,9 +40,30 @@ public class RSSFeedMessage {
         this.link = link;
     }
 
+    public Date getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(Date pubDate) {
+        this.pubDate = pubDate;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
     @Override
     public String toString() {
-        return "FeedMessage [title=" + title + ", description=" + description + ", link=" + link + "]";
+        return "RSSFeedMessage{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", link='" + link + '\'' +
+                ", pubDate=" + pubDate +
+                '}';
     }
 
 }

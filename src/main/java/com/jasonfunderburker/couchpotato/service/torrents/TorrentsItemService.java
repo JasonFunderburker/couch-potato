@@ -17,6 +17,8 @@ public interface TorrentsItemService {
 
     void checkItem(TorrentItem item);
 
+    void checkItem(long id);
+
     void checkAllItems();
 
     void addItemToList(TorrentItem item) throws IllegalArgumentException;

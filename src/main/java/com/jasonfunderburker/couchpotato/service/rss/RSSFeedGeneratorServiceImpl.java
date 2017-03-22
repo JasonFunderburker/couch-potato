@@ -6,6 +6,7 @@ import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,9 +27,12 @@ public class RSSFeedGeneratorServiceImpl implements RSSFeedGeneratorService {
 
     private RSSFeedMessage generateFor(TorrentItem item, String linkPrefix) {
         RSSFeedMessage feedMessage = new RSSFeedMessage();
+        String link = linkPrefix + "/checkResults/download/" + item.getFileName()+"/";
         feedMessage.setTitle(item.getName());
         feedMessage.setDescription(item.getName());
-        feedMessage.setLink(linkPrefix + "/checkResults/download/" + item.getFileName()+"/");
+        feedMessage.setLink(link);
+        feedMessage.setPubDate(new Date());
+        feedMessage.setGuid(link);
         return feedMessage;
     }
 }

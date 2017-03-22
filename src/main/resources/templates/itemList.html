@@ -12,7 +12,7 @@
     <a href="settings.html" th:href="@{/settings}">Settings</a>
     <a href="login.html" th:href="@{/logout}">Logout</a>
 </div>
-<form class="box" th:action="@{/itemList/check}" method="post">
+<form class="box" th:action="@{/itemList/checkAll}" method="post">
     <button class="button" type="submit">Check now</button>
 </form>
 <form class="box" th:action="@{/itemList/scheduleCheck}" th:object="${scheduleSettings}" method="post">
@@ -93,6 +93,9 @@
         <td>
             <form action="#" th:action="@{/itemList/{id}/remove(id=${item.id})}" method="post">
                 <button type="submit" class="button">Delete item</button>
+            </form>
+            <form action="#" th:action="@{/itemList/{id}/check(id=${item.id})}" method="post">
+                <button type="submit" class="button">Check item</button>
             </form>
         </td>
         <td th:text="${item.id}">10</td>

@@ -45,7 +45,7 @@ public class ItemListController {
         model.addAttribute("torrentItem", new TorrentItem());
         model.addAttribute("scheduleSettings", scheduleSettings);
         if (!model.containsAttribute("generatedRssUrl")) model.addAttribute("generatedRssUrl","");
-        logger.debug("modelMap: {}",model);
+        logger.trace("modelMap: {}",model);
 		return "itemList";
 	}
 
@@ -69,7 +69,14 @@ public class ItemListController {
         return "redirect:/itemList";
     }
 
-    @RequestMapping(value = "/itemList/check", method = RequestMethod.POST)
+    @RequestMapping(value = "/itemList/{id}/check", method = RequestMethod.POST)
+    public String itemListStartCheck(@PathVariable("id")long id, ModelMap model) {
+        logger.debug("Check id={} now", id);
+        itemService.checkItem(id);
+        return "redirect:/itemList";
+    }
+
+    @RequestMapping(value = "/itemList/checkAll", method = RequestMethod.POST)
     public String itemListStartCheck(ModelMap model) {
         logger.debug("Start check now");
         itemService.checkAllItems();

@@ -49,6 +49,13 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     }
 
     @Override
+    public void checkItem(long id) {
+        logger.debug("checkItem id: {}", id);
+        TorrentItem item = torrentItemDao.findById(id);
+        if (item != null) checkItem(item);
+    }
+
+    @Override
     public void checkAllItems() {
         List<TorrentItem> allItems = getItemsList();
         allItems.forEach(this::checkItem);

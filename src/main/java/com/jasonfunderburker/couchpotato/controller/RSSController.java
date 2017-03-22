@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ import java.util.UUID;
 public class RSSController {
     private static final Logger logger = LoggerFactory.getLogger(RSSController.class);
     private static String DOWNLOAD_PATH_PREFIX;
-    private ObjectMapper objectMapper = new XmlMapper();
+    private XmlMapper xmlMapper = new XmlMapper();
 
     private final RSSFeedGeneratorService feedGeneratorService;
     private final TorrentsItemService itemService;
@@ -45,6 +46,8 @@ public class RSSController {
         this.feedGeneratorService = feedGeneratorService;
         this.itemService = itemService;
         this.userDetails = userDetails;
+        xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+        xmlMapper.setDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"));
     }
 
 
@@ -85,9 +88,9 @@ public class RSSController {
         logger.debug("downloadedTorrents: {}", downloadedTorrents);
         RSSFeed rssFeed = feedGeneratorService.generateFor(downloadedTorrents, getDownloadPathPrefix(request));
         logger.debug("rssFeed: {}", rssFeed);
-        String rssAsString = objectMapper.writeValueAsString(rssFeed);
-        response.setContentType("application/rss+xml");
-        IOUtils.write(rssAsString, response.getOutputStream(), "windows-1251");
+        String rssAsString = xmlMapper.writeValueAsString(rssFeed);
+        response.setContentType("application/rss+xml; charset=UTF-8");
+        IOUtils.write(rssAsString, response.getOutputStream(), "UTF-8");
         response.getOutputStream().close();
     }
 
