@@ -13,6 +13,7 @@ public class RSSFeedMessage {
     String title;
     String description;
     String link;
+    String category;
     Date pubDate;
     String guid;
 
@@ -56,13 +57,23 @@ public class RSSFeedMessage {
         this.guid = guid;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "RSSFeedMessage{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", link='" + link + '\'' +
+                ", category='" + category + '\'' +
                 ", pubDate=" + pubDate +
+                ", guid='" + guid + '\'' +
                 '}';
     }
 

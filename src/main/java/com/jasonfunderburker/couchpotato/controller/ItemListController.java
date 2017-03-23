@@ -70,7 +70,7 @@ public class ItemListController {
     }
 
     @RequestMapping(value = "/itemList/{id}/check", method = RequestMethod.POST)
-    public String itemListStartCheck(@PathVariable("id")long id, ModelMap model) {
+    public String checkItemById(@PathVariable("id")long id, ModelMap model) {
         logger.debug("Check id={} now", id);
         itemService.checkItem(id);
         return "redirect:/itemList";

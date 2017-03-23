@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created by JasonFunderburker on 27.09.2016
@@ -37,7 +38,7 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
             File dir = new File(routePath.getPath() + File.separator + "downloads");
             logger.debug("absolute download directory path: " + dir.getAbsolutePath());
             boolean mkdirs = dir.mkdirs();
-            fileName = "torrent_" + item.getId() + ".torrent";
+            fileName = "torrent" + item.getId() + UUID.randomUUID() + ".torrent";
             FileOutputStream outputStream = new FileOutputStream(new File(dir, fileName));
             InputStream inputStream = anchor.click().getWebResponse().getContentAsStream();
             IOUtils.copy(inputStream, outputStream);

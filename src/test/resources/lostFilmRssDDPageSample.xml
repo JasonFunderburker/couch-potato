@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="0.91">
+    <channel>
+        <title>LostFilm.TV</title>
+        <description>Свежачок от LostFilm.TV</description>
+        <link>https://www.lostfilm.tv/</link>
+        <lastBuildDate>Wed, 22 Mar 2017 20:23:06 +0000</lastBuildDate>
+        <language>ru</language>
+        <item>
+            <title>SomeName. SomeName2 (S05E17) [MP4]</title>
+            <category>[MP4]</category>
+            <pubDate>Wed, 22 Mar 2017 14:40:20 +0000</pubDate>
+            <link>http://linkMP4</link>
+        </item>
+        <item>
+            <title>SomeName. SomeName2 (S05E17) [1080p]</title>
+            <category>[1080p]</category>
+            <pubDate>Wed, 22 Mar 2017 14:40:20 +0000</pubDate>
+            <link>http://link1080p</link>
+        </item>
+        <item>
+            <title>SomeName. SomeName2 (S05E17) [SD]</title>
+            <category>[SD]</category>
+            <pubDate>Wed, 22 Mar 2017 14:40:20 +0000</pubDate>
+            <link>http://linkSD</link>
+        </item>
+    </channel>
+</rss>

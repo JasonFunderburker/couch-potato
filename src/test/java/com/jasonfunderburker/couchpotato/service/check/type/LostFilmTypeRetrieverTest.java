@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by JasonFunderburker on 12.09.2016
@@ -50,12 +50,20 @@ public class LostFilmTypeRetrieverTest {
         assertNotNull(state.getInfo());
     }
 
-/*    @Test
+    @Test
     public void testGetDownloadLink() throws Exception {
-        item.setState(new TorrentState("4 сезон 9 серия"));
-        HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
+        WebClient wc = new WebClient();
+        WebClient wcstub = spy(wc);
+        doReturn(preparePage("/lostFilmRssDDPageSample.xml")).when(wcstub).getPage(anyString());
+        TorrentState state = new TorrentState();
+        state.setInfo("SomeName. SomeName2. (S05E17)");
+        item.setState(state);
+        HtmlAnchor anchor = retriever.getDownloadLink(item, wcstub);
+        assertEquals("http://link1080p", anchor.getAttribute("href"));
+        wc.close();
+        wcstub.close();
     }
-    */
+
 
     private Page preparePage(String resourceString) throws Exception {
         try (final WebClient webClient = new WebClient()) {

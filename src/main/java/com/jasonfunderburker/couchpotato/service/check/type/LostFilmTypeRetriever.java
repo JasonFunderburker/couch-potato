@@ -2,6 +2,7 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -25,6 +28,8 @@ import java.util.Optional;
 public class LostFilmTypeRetriever extends BaseTypeRetriever {
     private static final Logger logger = LoggerFactory.getLogger(LostFilmTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://www.lostfilm.tv/login";
+    private static final String RSS_PAGE = "http://www.lostfilm.tv/rss.xml";
+    private static final String RSS_DOWLOANDS_PAGE = "http://retre.org/rssdd.xml";
     private final XmlMapper mapper = new XmlMapper();
 
     public LostFilmTypeRetriever() {
@@ -37,7 +42,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         if (item.getState() == null) {
             result = getInitialState(item, webClient);
         } else {
-            XmlPage rssPage = webClient.getPage("http://www.lostfilm.tv/rss.xml");
+            XmlPage rssPage = webClient.getPage(RSS_PAGE);
             logger.trace("Rss page content={}", rssPage.asXml());
             RSSFeed rss = mapper.readValue(rssPage.asXml(), RSSFeed.class);
             Optional<RSSFeedMessage> rssItem = rss.getChannel().getEntries().stream()
@@ -73,16 +78,26 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
 
     @Override
     public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
-        webClient.getOptions().setJavaScriptEnabled(true);
-        HtmlPage pageWithEpisodeInfo = webClient.getPage(item.getLink()+item.getState().getState());
-        logger.trace("pageWithEpisodeInfo: {}", pageWithEpisodeInfo.asText());
-        HtmlDivision div = pageWithEpisodeInfo.getFirstByXPath("//div[@class='external-btn']");
-        logger.debug("div with click: {}", div.asText());
-        HtmlPage downloadPage = div.click();
-        logger.trace("downloadTitle: {}", downloadPage.getTitleText());
-        logger.trace("downloadPage: {}", downloadPage.asText());
-        HtmlAnchor anchor = downloadPage.getFirstByXPath("//a[contains(text(), '1080p')]");
-        webClient.getOptions().setJavaScriptEnabled(false);
+        HtmlAnchor anchor = null;
+        String title = item.getState().getInfo();
+        int lastDot = title.lastIndexOf(".");
+        String downloadTitle = title.substring(0, lastDot) + title.substring(lastDot+1, title.length());
+        logger.debug("downloadTitle={}", downloadTitle);
+        XmlPage rssDownloads = webClient.getPage(RSS_DOWLOANDS_PAGE);
+        logger.debug("rssDownloads page content={}", rssDownloads.asXml());
+        RSSFeed rss = mapper.readValue(rssDownloads.asXml(), RSSFeed.class);
+        Optional<RSSFeedMessage> rssItem = rss.getChannel().getEntries().stream()
+                .peek(e -> logger.trace("rssDownloads item = {}",e))
+                .filter(t -> t.getTitle().contains(downloadTitle))
+                .filter(t -> t.getCategory().contains("1080p"))
+                .findFirst();
+        if (rssItem.isPresent()) {
+            logger.debug("rssDownloads is found = {}", rssItem);
+            HtmlPage page = HTMLParser.parseHtml(new StringWebResponse("<a href=\""+rssItem.get().getLink().trim()+"\"/>", new URL("http://some")), webClient.getCurrentWindow());
+            logger.trace("page content={}", page.asXml());
+            anchor = page.getFirstByXPath("//a");
+            logger.debug("download link = {}", anchor.getHrefAttribute());
+        }
         if (anchor == null) throw new TorrentRetrieveException("link for '1080p' is not found");
         return anchor;
     }

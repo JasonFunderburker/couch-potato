@@ -34,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/css/**", "/register").permitAll()
                     .antMatchers(HttpMethod.GET, "/rss/public/?*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/checkResults/download/torrent?*.torrent/").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin().failureUrl("/login?error")
