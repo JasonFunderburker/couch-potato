@@ -77,8 +77,8 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     }
 
     @Override
-    public HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
-        HtmlAnchor anchor = null;
+    public String getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
+        String downloadLink = null;
         String title = item.getState().getInfo();
         int lastDot = title.lastIndexOf(".");
         String downloadTitle = title.substring(0, lastDot) + title.substring(lastDot+1, title.length());
@@ -93,18 +93,17 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
                 .findFirst();
         if (rssItem.isPresent()) {
             logger.debug("rssDownloads is found = {}", rssItem);
-            HtmlPage page = HTMLParser.parseHtml(new StringWebResponse("<a href=\""+rssItem.get().getLink().trim()+"\"/>", new URL("http://some")), webClient.getCurrentWindow());
-            logger.trace("page content={}", page.asXml());
-            anchor = page.getFirstByXPath("//a");
-            logger.debug("download link = {}", anchor.getHrefAttribute());
+            downloadLink = rssItem.get().getLink().trim();
         }
-        if (anchor == null) throw new TorrentRetrieveException("link for '1080p' is not found");
-        return anchor;
+        if (downloadLink == null) throw new TorrentRetrieveException("link for '1080p' is not found");
+        webClient.addCookie("", new URL(downloadLink), null);
+        webClient.addCookie("", new URL(downloadLink), null);
+        return downloadLink;
     }
 
     @Override
     public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
-        HtmlPage loginPage = webClient.getPage(LOGIN_PAGE);
+ /*       HtmlPage loginPage = webClient.getPage(LOGIN_PAGE);
         logger.trace("loginPage: {}", loginPage.asText());
         HtmlInput loginInput = loginPage.getElementByName("mail");
         loginInput.type(item.getUserInfo().getUserName());
@@ -114,7 +113,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
         HtmlInput passInput = loginPage.getElementByName("pass");
         passInput.type(password);
         HtmlInput button = loginPage.getFirstByXPath("//input[@class='primary-btn sign-in-btn' and @type='button']");
-        button.click();
+        button.click(); */
     }
 
     @Override

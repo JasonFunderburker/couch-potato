@@ -22,9 +22,10 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
     private static final String LOGIN_PAGE = "https://nnmclub.to/forum/login.php";
 
     @Override
-    public HtmlAnchor getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+    public String getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
-        return source.getFirstByXPath("//a[contains(@href, 'download')]");
+        HtmlAnchor anchor = source.getFirstByXPath("//a[contains(@href, 'download')]");
+        return anchor.getHrefAttribute();
     }
 
     @Override

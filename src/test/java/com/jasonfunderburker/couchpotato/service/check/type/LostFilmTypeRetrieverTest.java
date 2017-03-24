@@ -58,8 +58,9 @@ public class LostFilmTypeRetrieverTest {
         TorrentState state = new TorrentState();
         state.setInfo("SomeName. SomeName2. (S05E17)");
         item.setState(state);
-        HtmlAnchor anchor = retriever.getDownloadLink(item, wcstub);
-        assertEquals("http://link1080p", anchor.getAttribute("href"));
+//        HtmlAnchor anchor = retriever.getDownloadLink(item, wcstub);
+//        assertEquals("http://link1080p", anchor.getAttribute("href"));
+        assertEquals("http://link1080p", retriever.getDownloadLink(item, wcstub));
         wc.close();
         wcstub.close();
     }

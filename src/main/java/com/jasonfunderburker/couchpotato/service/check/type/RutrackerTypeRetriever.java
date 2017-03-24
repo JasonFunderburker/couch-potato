@@ -27,9 +27,10 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
     private ProxyConfig proxyConfig;
 
     @Override
-    public HtmlAnchor getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
-        HtmlPage source = webClient.getPage(item.getLink());
-        return source.getFirstByXPath("//a[@class='dl-stub']");
+    public String getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+//        HtmlPage source = webClient.getPage(item.getLink());
+//        HtmlAnchor anchor = source.getFirstByXPath("//a[@class='dl-stub']");
+        return item.getLink().replace("viewtopic", "dl");
     }
 
     @Override

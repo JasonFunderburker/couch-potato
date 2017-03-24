@@ -49,8 +49,9 @@ public class NNMClubTypeRetrieverTest {
 
     @Test
     public void testGetDownloadLink() throws Exception {
-        HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
+//        HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
 
-        assertTrue(anchor.getHrefAttribute().contains("download.php?id=843729"));
+        assertTrue(retriever.getDownloadLink(item, webClientMock).contains("download.php?id=843729"));
+//        assertTrue(anchor.getHrefAttribute().contains("download.php?id=843729"));
     }
 }

@@ -50,9 +50,10 @@ public class NewStudioTypeRetrieverTest {
     @Test
     public void testGetDownloadLink() throws Exception {
         item.setState(new TorrentState("15661"));
-        HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
+//        HtmlAnchor anchor = retriever.getDownloadLink(item, webClientMock);
 
-        assertEquals("./download.php?id=15516", anchor.getHrefAttribute());
+//        assertEquals("./download.php?id=15516", anchor.getHrefAttribute());
+        assertEquals("./download.php?id=15516", retriever.getDownloadLink(item, webClientMock));
     }
 
     @Test

@@ -1,7 +1,9 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
@@ -32,7 +34,8 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
     @Override
     public String download(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         String fileName = "";
-        HtmlAnchor anchor = getDownloadLink(item, webClient);
+        String downloadLink = getDownloadLink(item, webClient);
+        logger.debug("downloadLink = {}", downloadLink);
         URL routePath = this.getClass().getClassLoader().getResource(File.separator);
         if (routePath != null) {
             File dir = new File(routePath.getPath() + File.separator + "downloads");
@@ -40,16 +43,21 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
             boolean mkdirs = dir.mkdirs();
             fileName = "torrent" + item.getId() + UUID.randomUUID() + ".torrent";
             FileOutputStream outputStream = new FileOutputStream(new File(dir, fileName));
-            InputStream inputStream = anchor.click().getWebResponse().getContentAsStream();
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-
+            WebResponse response = webClient.getPage(downloadLink).getWebResponse();
+            if (response.getContentType().equals("application/x-bittorrent")) {
+                InputStream inputStream = response.getContentAsStream();
+                IOUtils.copy(inputStream, outputStream);
+                inputStream.close();
+                outputStream.close();
+            } else {
+                throw new TorrentRetrieveException("can't download torrent file from url=" + downloadLink + " " +
+                        "content-type=" + response.getContentType() + ", responseAsString=" + response.getContentAsString());
+            }
         }
         return fileName;
     }
 
-    public abstract HtmlAnchor getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
+    public abstract String getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException;
 
     @Override
     public ProxyConfig getProxyConfig() {
