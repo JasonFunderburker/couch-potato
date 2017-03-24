@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 25.10.2016
@@ -28,10 +29,13 @@ public class NewStudioTypeRetriever extends BaseTypeRetriever {
     }
 
     @Override
-    public String getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+    public URL getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
         HtmlAnchor anchor = source.getFirstByXPath("//div[@id='"+item.getState().getState()+"']//a[contains(@href, 'download')]");
-        return anchor.getHrefAttribute();
+        if (anchor.getHrefAttribute() == null) {
+            throw new TorrentRetrieveException("Download link not found on page="+ item.getLink());
+        }
+        return source.getFullyQualifiedUrl(anchor.getHrefAttribute());
     }
 
     @Override

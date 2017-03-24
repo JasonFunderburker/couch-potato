@@ -2,13 +2,13 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
 import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -77,8 +76,8 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     }
 
     @Override
-    public String getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
-        String downloadLink = null;
+    public URL getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
+        URL downloadLink = null;
         String title = item.getState().getInfo();
         int lastDot = title.lastIndexOf(".");
         String downloadTitle = title.substring(0, lastDot) + title.substring(lastDot+1, title.length());
@@ -93,27 +92,20 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
                 .findFirst();
         if (rssItem.isPresent()) {
             logger.debug("rssDownloads is found = {}", rssItem);
-            downloadLink = rssItem.get().getLink().trim();
+            downloadLink = new URL(rssItem.get().getLink().trim());
         }
         if (downloadLink == null) throw new TorrentRetrieveException("link for '1080p' is not found");
-        webClient.addCookie("", new URL(downloadLink), null);
-        webClient.addCookie("", new URL(downloadLink), null);
+        webClient.addCookie("uid="+item.getUserInfo().getUserName(), downloadLink, null);
+        webClient.addCookie("usess="+item.getUserInfo().getPassword(), downloadLink, null);
         return downloadLink;
     }
 
     @Override
     public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
- /*       HtmlPage loginPage = webClient.getPage(LOGIN_PAGE);
-        logger.trace("loginPage: {}", loginPage.asText());
-        HtmlInput loginInput = loginPage.getElementByName("mail");
-        loginInput.type(item.getUserInfo().getUserName());
-        String password = item.getUserInfo().getPassword();
-        if (password == null)
-            throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
-        HtmlInput passInput = loginPage.getElementByName("pass");
-        passInput.type(password);
-        HtmlInput button = loginPage.getFirstByXPath("//input[@class='primary-btn sign-in-btn' and @type='button']");
-        button.click(); */
+        TorrentUserInfo userInfo = item.getUserInfo();
+        if (userInfo.getUserName() == null || userInfo.getPassword() == null) {
+            throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
+        }
     }
 
     @Override

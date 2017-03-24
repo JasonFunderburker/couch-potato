@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 27.09.2016
@@ -22,10 +23,13 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
     private static final String LOGIN_PAGE = "https://nnmclub.to/forum/login.php";
 
     @Override
-    public String getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+    public URL getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
         HtmlAnchor anchor = source.getFirstByXPath("//a[contains(@href, 'download')]");
-        return anchor.getHrefAttribute();
+        if (anchor.getHrefAttribute() == null) {
+            throw new TorrentRetrieveException("Download link not found on page="+ item.getLink());
+        }
+        return source.getFullyQualifiedUrl(anchor.getHrefAttribute());
     }
 
     @Override

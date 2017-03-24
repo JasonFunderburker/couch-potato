@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by JasonFunderburker on 25.10.2016
@@ -27,10 +28,13 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
     private ProxyConfig proxyConfig;
 
     @Override
-    public String getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
-//        HtmlPage source = webClient.getPage(item.getLink());
-//        HtmlAnchor anchor = source.getFirstByXPath("//a[@class='dl-stub']");
-        return item.getLink().replace("viewtopic", "dl");
+    public URL getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
+        HtmlPage source = webClient.getPage(item.getLink());
+        HtmlAnchor anchor = source.getFirstByXPath("//a[@class='dl-stub']");
+        if (anchor.getHrefAttribute() == null) {
+            throw new TorrentRetrieveException("Download link not found on page="+ item.getLink());
+        }
+        return source.getFullyQualifiedUrl(anchor.getHrefAttribute());
     }
 
     @Override

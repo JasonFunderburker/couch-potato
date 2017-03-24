@@ -19,11 +19,11 @@
                         <label th:text="${torrentType.name}">Torrent type</label>
                     </div>
                     <div>
-                        <label>UserName</label>
+                        <label th:text="(${torrentType.name() == 'LOST_FILM'}) ? ('UserId') : ('Username')">UserName</label>
                     </div>
                     <input type="text" th:field="*{userName}"/>
                     <div>
-                        <label>Password</label>
+                        <label th:text="(${torrentType.name() == 'LOST_FILM'}) ? ('Usess') : ('Password')">Password</label>
                     </div>
                     <input type="password" th:field="*{hash}"/>
                     <button type="submit" class="button">Save</button>

@@ -5,10 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -17,6 +13,15 @@ public class TorrentUserInfo {
     private String userName;
     private String hash;
     private String clearHash;
+
+    public TorrentUserInfo() {
+        super();
+    }
+
+    public TorrentUserInfo(String userName, String password) {
+        this.userName = userName;
+        setHash(password);
+    }
 
     public Long getTorrentTypeId() {
         return torrentTypeId;

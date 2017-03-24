@@ -1,14 +1,18 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -52,17 +56,19 @@ public class LostFilmTypeRetrieverTest {
 
     @Test
     public void testGetDownloadLink() throws Exception {
-        WebClient wc = new WebClient();
-        WebClient wcstub = spy(wc);
-        doReturn(preparePage("/lostFilmRssDDPageSample.xml")).when(wcstub).getPage(anyString());
+        List<String> cookies = new ArrayList<>();
+        doAnswer(inv -> cookies.add(inv.getArgumentAt(0, String.class))).when(webClientMock).addCookie(anyString(), any(URL.class), anyObject());
+        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostFilmRssDDPageSample.xml"));
+        String uidValue = "uidValue";
+        String usessValue = "usessValue";
         TorrentState state = new TorrentState();
         state.setInfo("SomeName. SomeName2. (S05E17)");
         item.setState(state);
-//        HtmlAnchor anchor = retriever.getDownloadLink(item, wcstub);
-//        assertEquals("http://link1080p", anchor.getAttribute("href"));
-        assertEquals("http://link1080p", retriever.getDownloadLink(item, wcstub));
-        wc.close();
-        wcstub.close();
+        item.setUserInfo(new TorrentUserInfo(uidValue, usessValue));
+        assertEquals(new URL("http://link1080p"), retriever.getDownloadLink(item, webClientMock));
+        System.out.println(cookies);
+        assertTrue(cookies.contains("uid="+uidValue));
+        assertTrue(cookies.contains("usess="+usessValue));
     }
 
 
