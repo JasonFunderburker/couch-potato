@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,20 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     AccountsDao accountsDao;
     @Autowired
     TorrentCheckService checkService;
+
+
+    private volatile Date checkStartDate = null;
+    private volatile Date checkEndDate = null;
+
+    @Override
+    public Date getCheckStartDate() {
+        return checkStartDate;
+    }
+
+    @Override
+    public Date getCheckEndDate() {
+        return checkEndDate;
+    }
 
     @Override
     public List<TorrentItem> getItemsList() {
@@ -57,8 +72,10 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
 
     @Override
     public void checkAllItems() {
+        checkStartDate = new Date();
         List<TorrentItem> allItems = getItemsList();
         allItems.forEach(this::checkItem);
+        checkEndDate = new Date();
     }
 
     @Override

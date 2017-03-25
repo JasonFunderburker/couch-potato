@@ -3,6 +3,7 @@ package com.jasonfunderburker.couchpotato.service.torrents;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,4 +25,8 @@ public interface TorrentsItemService {
     void addItemToList(TorrentItem item) throws IllegalArgumentException;
 
     void deleteItemFromList(long id);
+
+    Date getCheckStartDate();
+
+    Date getCheckEndDate();
 }

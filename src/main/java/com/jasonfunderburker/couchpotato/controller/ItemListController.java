@@ -44,6 +44,8 @@ public class ItemListController {
         model.addAttribute("itemList", torrentItemsList);
         model.addAttribute("torrentItem", new TorrentItem());
         model.addAttribute("scheduleSettings", scheduleSettings);
+        model.addAttribute("checkStartDate", itemService.getCheckStartDate());
+        model.addAttribute("checkEndDate", itemService.getCheckEndDate());
         if (!model.containsAttribute("generatedRssUrl")) model.addAttribute("generatedRssUrl","");
         logger.trace("modelMap: {}",model);
 		return "itemList";

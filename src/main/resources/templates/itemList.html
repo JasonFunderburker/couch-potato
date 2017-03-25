@@ -20,6 +20,8 @@
     <input type="time" th:field="*{scheduleTime}"/>
     <button class="button" type="submit">Save</button>
 </form>
+<div th:text="'Last check start at '+(${checkStartDate} ? ${#dates.format(checkStartDate, 'YYYY-MM-DD HH:mm:ss Z')})"></div>
+<div th:text="'Last check end at '+(${checkEndDate} ? ${#dates.format(checkEndDate, 'YYYY-MM-DD HH:mm:ss Z')})"></div>
 <div id="popup1" class="overlay">
     <div class="popup">
         <h2>Add new item to list</h2>

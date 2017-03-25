@@ -63,7 +63,7 @@ public class DownloadsController {
 
             // set content attributes for the response
             response.setContentType(mimeType);
-            response.setContentLength((int) downloadFile.length());
+            //response.setContentLength((int) downloadFile.length());
 
             // set headers for the response
             String headerKey = "Content-Disposition";
