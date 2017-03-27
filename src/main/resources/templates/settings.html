@@ -3,18 +3,47 @@
 <head>
     <title>Settings</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
-    <link rel="stylesheet" href="../static/css/main.css" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/css/main2.css" th:href="@{/css/main2.css}" rel="stylesheet">
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+
 </head>
 <body>
-    <div align="right">
-        <a href="itemList.html" th:href="@{/itemList}">Back</a>
-        <a href="login.html" th:href="@{/logout}">Logout</a>
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="itemList.html" th:href="@{/itemList}">Home</a>
+                </li>
+                <li>
+                    <a href="rssPublic.html" th:href="@{/rssPublic}">RSS Public</a>
+                </li>
+                <li>
+                    <a href="#" th:href="@{#}">Settings</a>
+                </li>
+                <li>
+                    <a href="login.html" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
     </div>
+</div>
+<div id="green">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 centered">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
     <table class="item-table">
-    <tbody>
+        <tbody>
         <tr th:each="torrentType: ${torrentTypes}">
             <td>
-                <form action="#" th:action="@{./torrentType/{id}/account(id=${torrentType.id})}" th:object="${userInfo}" method="post">
+                <form action="#" th:action="@{./torrentType/{id}/account(id=${torrentType.id})}" th:object="${userInfo}"
+                      method="post">
                     <div>
                         <label th:text="${torrentType.name}">Torrent type</label>
                     </div>
@@ -30,8 +59,8 @@
                 </form>
             </td>
         </tr>
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
