@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
 import com.jasonfunderburker.couchpotato.service.check.type.TorrentRetriever;
@@ -52,8 +53,8 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                     item.setState(newState);
                     item.setErrorText(null);
                 } else {
-                    if (!newState.equals(item.getState()) || item.getStatus().equals(ERROR)) {
-                        item.setStatus(item.getStatus().equals(ERROR) ? RELOADED : REFRESHED);
+                    if (!newState.equals(item.getState()) || item.getStatus().equals(DOWNLOAD_ERROR)) {
+                        item.setStatus(item.getStatus().equals(DOWNLOAD_ERROR) ? RELOADED : REFRESHED);
                         item.setState(newState);
                         item.setErrorText(null);
                         String fileName = torrentRetriever.download(item, webClient);
@@ -75,11 +76,15 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
         } catch (IOException | FailingHttpStatusCodeException e) {
             item.setStatus(ERROR);
             item.setErrorText("Can't read response from url: " + item.getLink() + ", cause: " + e.getMessage());
-            logger.error("Can't read response from url: "+item.getLink(), e);
+            logger.error("Can't read response from url: " + item.getLink(), e);
+        } catch (TorrentDownloadException e) {
+            item.setStatus(DOWNLOAD_ERROR);
+            item.setErrorText(e.getMessage());
+            logger.error("Download item error: ", e);
         } catch (TorrentRetrieveException e) {
             item.setStatus(ERROR);
             item.setErrorText(e.getMessage());
-            logger.error("Check item error: ",e);
+            logger.error("Check item error: ", e);
         } catch (Exception e) {
             item.setStatus(ERROR);
             item.setErrorText("Some unexpected error: "+e.getMessage());

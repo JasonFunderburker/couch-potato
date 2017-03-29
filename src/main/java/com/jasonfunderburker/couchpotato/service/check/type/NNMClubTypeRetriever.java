@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,8 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
     public URL getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         HtmlPage source = webClient.getPage(item.getLink());
         HtmlAnchor anchor = source.getFirstByXPath("//a[contains(@href, 'download')]");
-        if (anchor.getHrefAttribute() == null) {
-            throw new TorrentRetrieveException("Download link not found on page="+ item.getLink());
+        if (anchor == null) {
+            throw new TorrentDownloadException("Download link not found on page="+ item.getLink());
         }
         return source.getFullyQualifiedUrl(anchor.getHrefAttribute());
     }

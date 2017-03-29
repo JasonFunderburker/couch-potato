@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public abstract class BaseTypeRetriever implements TorrentRetriever {
                 inputStream.close();
                 outputStream.close();
             } else {
-                throw new TorrentRetrieveException("can't download torrent file from url=" + downloadLink + " " +
+                throw new TorrentDownloadException("can't download torrent file from url=" + downloadLink + " " +
                         "content-type=" + response.getContentType() + ", responseAsString=" + response.getContentAsString());
             }
         }

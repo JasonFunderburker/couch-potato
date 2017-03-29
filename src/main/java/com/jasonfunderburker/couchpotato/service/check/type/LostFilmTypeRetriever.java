@@ -11,6 +11,7 @@ import com.jasonfunderburker.couchpotato.domain.TorrentType;
 import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
 import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
+import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,24 +80,27 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     public URL getDownloadLink(TorrentItem item, final WebClient webClient) throws TorrentRetrieveException, IOException {
         URL downloadLink = null;
         String title = item.getState().getInfo();
-        int lastDot = title.lastIndexOf(".");
-        String downloadTitle = title.substring(0, lastDot) + title.substring(lastDot+1, title.length());
-        logger.debug("downloadTitle={}", downloadTitle);
-        XmlPage rssDownloads = webClient.getPage(RSS_DOWLOANDS_PAGE);
-        logger.debug("rssDownloads page content={}", rssDownloads.asXml());
-        RSSFeed rss = mapper.readValue(rssDownloads.asXml(), RSSFeed.class);
-        Optional<RSSFeedMessage> rssItem = rss.getChannel().getEntries().stream()
-                .peek(e -> logger.trace("rssDownloads item = {}",e))
-                .filter(t -> t.getTitle().contains(downloadTitle))
-                .filter(t -> t.getCategory().contains("1080p"))
-                .findFirst();
-        if (rssItem.isPresent()) {
-            logger.debug("rssDownloads is found = {}", rssItem);
-            downloadLink = new URL(rssItem.get().getLink().trim());
+        if (title != null) {
+            int lastDot = title.lastIndexOf(".");
+            String downloadTitle = title.substring(0, lastDot) + title.substring(lastDot + 1, title.length());
+            logger.debug("downloadTitle={}", downloadTitle);
+            XmlPage rssDownloads = webClient.getPage(RSS_DOWLOANDS_PAGE);
+            logger.debug("rssDownloads page content={}", rssDownloads.asXml());
+            RSSFeed rss = mapper.readValue(rssDownloads.asXml(), RSSFeed.class);
+            Optional<RSSFeedMessage> rssItem = rss.getChannel().getEntries().stream()
+                    .peek(e -> logger.trace("rssDownloads item = {}", e))
+                    .filter(t -> t.getTitle().contains(downloadTitle))
+                    .filter(t -> t.getCategory().contains("1080p"))
+                    .findFirst();
+            if (rssItem.isPresent()) {
+                logger.debug("rssDownloads is found = {}", rssItem);
+                downloadLink = new URL(rssItem.get().getLink().trim());
+            }
+            if (downloadLink == null) throw new TorrentRetrieveException("link for '1080p' is not found");
+            webClient.addCookie("uid=" + item.getUserInfo().getUserName(), downloadLink, null);
+            webClient.addCookie("usess=" + item.getUserInfo().getPassword(), downloadLink, null);
         }
-        if (downloadLink == null) throw new TorrentRetrieveException("link for '1080p' is not found");
-        webClient.addCookie("uid="+item.getUserInfo().getUserName(), downloadLink, null);
-        webClient.addCookie("usess="+item.getUserInfo().getPassword(), downloadLink, null);
+        else throw new TorrentDownloadException("Error getting download URL, cause title for search is null");
         return downloadLink;
     }
 
