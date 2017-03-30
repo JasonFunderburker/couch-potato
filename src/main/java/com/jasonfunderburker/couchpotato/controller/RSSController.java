@@ -56,6 +56,11 @@ public class RSSController {
         generateRssContent(request, response);
     }
 
+    @RequestMapping(value = "/generator", method = RequestMethod.GET)
+    public String getGenerator() throws IOException {
+        return "rssGenerator";
+    }
+
     @RequestMapping(value = "/public", method = RequestMethod.GET)
     public String generateRssPublicUrl(HttpServletRequest request,ModelMap modelMap, RedirectAttributes redirectAttributes) {
         String generatedString = generatePublicString();
