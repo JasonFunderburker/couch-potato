@@ -62,11 +62,11 @@ public class RSSController {
     }
 
     @RequestMapping(value = "/public", method = RequestMethod.GET)
-    public String generateRssPublicUrl(HttpServletRequest request,ModelMap modelMap, RedirectAttributes redirectAttributes) {
+    public String generateRssPublicUrl(HttpServletRequest request, ModelMap modelMap, RedirectAttributes redirectAttributes) {
         String generatedString = generatePublicString();
         logger.debug("generatedString={}", generatedString);
         userDetails.saveRssPublicString(getUserName(), generatedString);
-        String generatedRssUrl = request.getRequestURL() +"/"+generatedString;
+        String generatedRssUrl = request.getRequestURL() + "/" + generatedString;
         logger.debug("generatedRssUrl={}", generatedRssUrl);
         redirectAttributes.addFlashAttribute("generatedRssUrl", generatedRssUrl);
         modelMap.addAttribute("generatedRssUrl", generatedRssUrl);
@@ -77,14 +77,13 @@ public class RSSController {
     public void getPublicRss(HttpServletRequest request, HttpServletResponse response, @PathVariable("rssUrl") String rssUrl) throws IOException {
         if (userDetails.isCorrectRssPublicString(rssUrl)) {
             generateRssContent(request, response);
-        }
-        else response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @RequestMapping(value = "/public/invalidate", method = RequestMethod.POST)
     public String invalidatePublicRssUrl(RedirectAttributes redirectAttributes) {
         userDetails.saveRssPublicString(getUserName(), null);
-        redirectAttributes.addFlashAttribute("invalidateResult","successfully invalidated");
+        redirectAttributes.addFlashAttribute("invalidateResult", "successfully invalidated");
         return "redirect:/itemList";
     }
 
@@ -104,12 +103,28 @@ public class RSSController {
     }
 
     private String generatePublicString() {
-        return UUID.randomUUID() +""+ UUID.randomUUID();
+        return UUID.randomUUID() + "" + UUID.randomUUID();
     }
 
     private String getDownloadPathPrefix(HttpServletRequest request) {
         if (DOWNLOAD_PATH_PREFIX == null) {
-            DOWNLOAD_PATH_PREFIX = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
+            logger.debug("x-forwarded-proto = {}", request.getHeader("x-forwarded-proto"));
+            logger.debug("x-forwarded-port = {}", request.getHeader("x-forwarded-port"));
+            logger.debug("Host header: = {}", request.getHeader("Host"));
+            String schemePart;
+            String portPart;
+            String hostPart;
+            if (request.getHeader("x-forwarded-proto") != null) {
+                schemePart = request.getHeader("x-forwarded-proto");
+                portPart = request.getHeader("x-forwarded-port");
+                hostPart = request.getHeader("Host");
+            } else {
+                schemePart = request.getScheme();
+                portPart = String.valueOf(request.getServerPort());
+                hostPart = request.getServerName();
+            }
+            DOWNLOAD_PATH_PREFIX = schemePart + "://" + hostPart
+                    + (portPart != null ? (":" + portPart) : "") + request.getContextPath();
             logger.debug("set DOWNLOAD_PATH_PREFIX: {}", DOWNLOAD_PATH_PREFIX);
         }
         return DOWNLOAD_PATH_PREFIX;
