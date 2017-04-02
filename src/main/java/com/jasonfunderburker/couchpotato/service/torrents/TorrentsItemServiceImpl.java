@@ -81,6 +81,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     @Override
     public void addItemToList(TorrentItem item) throws IllegalArgumentException {
         logger.debug("add item: {}", item);
+        item.setLink(item.getLink().replace("www.",""));
         item.setType(getTypeNameFromLink(item.getLink()));
         item.setUserInfo(getUserInfoByType(item.getType()));
         checkService.check(item);
@@ -95,7 +96,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     private TorrentType getTypeNameFromLink(String link) {
         try {
             URL url = new URL(link);
-            String typeName = url.getAuthority().replace("www.","").replaceFirst("\\.(.+)", "");
+            String typeName = url.getAuthority().replaceFirst("\\.(.+)", "");
             TorrentType resultType = null;
             for (TorrentType type :TorrentType.values()) {
                 if (type.getName().equals(typeName)) {

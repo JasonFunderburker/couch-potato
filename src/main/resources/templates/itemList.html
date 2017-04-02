@@ -60,34 +60,29 @@
         </div>
     </div>
 </form>
-<div class="col-lg-12" th:text="'Last check start at '+(${checkStartDate} ? ${#dates.format(checkStartDate, 'YYYY-MM-dd HH:mm:ss Z')})">Last check start at YYYY-MM-dd HH-mm-SS</div>
-<div class="col-lg-12" th:text="'Last check end at '+(${checkEndDate} ? ${#dates.format(checkEndDate, 'YYYY-MM-dd HH:mm:ss Z')})">Last check end at YYYY-MM-dd HH-mm-SS</div>
-<div id="popup1" class="overlay" hidden="hidden">
-    <div class="popup">
-        <h2>Add new item to list</h2>
-        <a class="close" href="#" th:href="@{#}">x</a>
-
-        <form action="#" th:action="@{/itemList}" th:object="${torrentItem}" method="post">
-            <div>
-                <label>Torrent item link</label>
-            </div>
-            <div>
-                <input type="text" th:field="*{link}"/>
-            </div>
-            <div class="box">
-                <button class="btn btn-theme btn-md" type="submit" name="save">Save</button>
-            </div>
-        </form>
-    </div>
+<div class="col-lg-12"
+     th:text="'Last check start at '+(${checkStartDate} ? ${#dates.format(checkStartDate, 'YYYY-MM-dd HH:mm:ss Z')})">
+    Last check start at YYYY-MM-dd HH-mm-SS
 </div>
+<div class="col-lg-12"
+     th:text="'Last check end at '+(${checkEndDate} ? ${#dates.format(checkEndDate, 'YYYY-MM-dd HH:mm:ss Z')})">Last
+    check end at YYYY-MM-dd HH-mm-SS
+</div>
+<form class="col-lg-12" th:action="@{/itemList}" th:object="${torrentItem}" method="post">
+    <div class="row mt">
+        <label class="col-lg-2">Torrent item link</label>
+        <input class="col-lg-8" type="text" th:field="*{link}"/>
+        <div class="col-lg-2">
+            <button class="btn btn-theme btn-xs" type="submit" name="save">Add item</button>
+        </div>
+    </div>
+</form>
 
 <h1 th:text="${errorMessage}" class="error">Some message</h1>
 <table class="table .table-striped">
     <thead>
     <tr>
-        <th>
-            <a class="btn btn-theme btn-md" href="#popup1" th:href="@{#popup1}">Add item</a>
-        </th>
+        <th>Actions</th>
         <th>Id</th>
         <th>Name</th>
         <th>Status</th>
