@@ -4,3 +4,6 @@ target
 .project
 *.iml
 .idea
+
+# OS generated filed
+.DS_Store

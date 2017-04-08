@@ -28,15 +28,21 @@ public class TypeRetrieverConfig {
     public TorrentRetriever rutrackerTypeRetriever() {
         return new RutrackerTypeRetriever();
     }
+
     @Bean
     public TorrentRetriever newStudioTypeRetriever() {
         return new NewStudioTypeRetriever();
     }
 
     @Bean
+    public TorrentRetriever voProductionTypeRetriever() {
+        return new VoProductionTypeRetriever();
+    }
+
+    @Bean
     public StateRetrieversDictionary retrieversDictionary() {
         return new StateRetrieversDictionary(Arrays.asList(lostFilmTypeRetriever(), nnmClubTypeRetriever(),
-                rutrackerTypeRetriever(), newStudioTypeRetriever()));
+                rutrackerTypeRetriever(), newStudioTypeRetriever(), voProductionTypeRetriever()));
     }
 
 }

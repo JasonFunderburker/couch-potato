@@ -1,6 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.*;
+import com.jasonfunderburker.couchpotato.HtmlUtils;
 import com.jasonfunderburker.couchpotato.domain.TorrentItem;
 import com.jasonfunderburker.couchpotato.domain.TorrentState;
 import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
@@ -37,7 +38,7 @@ public class LostFilmTypeRetrieverTest {
 
     @Test
     public void testGetInitialState() throws Exception {
-        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostfilmHtmlPageSample.html"));
+        when(webClientMock.getPage(anyString())).thenReturn(HtmlUtils.preparePage("/lostfilmHtmlPageSample.html"));
         TorrentState state = retriever.getState(item, webClientMock);
 
         assertEquals("/season_4/episode_9/", state.getState());
@@ -45,7 +46,7 @@ public class LostFilmTypeRetrieverTest {
 
     @Test
     public void testGetState() throws Exception {
-        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostFilmRssPageSample.xml"));
+        when(webClientMock.getPage(anyString())).thenReturn(HtmlUtils.preparePage("/lostFilmRssPageSample.xml"));
         TorrentState oldState = new TorrentState("someLink");
         item.setState(oldState);
         TorrentState state = retriever.getState(item, webClientMock);
@@ -58,7 +59,7 @@ public class LostFilmTypeRetrieverTest {
     public void testGetDownloadLink() throws Exception {
         List<String> cookies = new ArrayList<>();
         doAnswer(inv -> cookies.add(inv.getArgumentAt(0, String.class))).when(webClientMock).addCookie(anyString(), any(URL.class), anyObject());
-        when(webClientMock.getPage(anyString())).thenReturn(preparePage("/lostFilmRssDDPageSample.xml"));
+        when(webClientMock.getPage(anyString())).thenReturn(HtmlUtils.preparePage("/lostFilmRssDDPageSample.xml"));
         String uidValue = "uidValue";
         String usessValue = "usessValue";
         TorrentState state = new TorrentState();
@@ -69,15 +70,5 @@ public class LostFilmTypeRetrieverTest {
         System.out.println(cookies);
         assertTrue(cookies.contains("uid="+uidValue));
         assertTrue(cookies.contains("usess="+usessValue));
-    }
-
-
-    private Page preparePage(String resourceString) throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            webClient.getOptions().setJavaScriptEnabled(false);
-            webClient.getOptions().setThrowExceptionOnScriptError(false);
-            webClient.getOptions().setCssEnabled(false);
-            return webClient.getPage(getClass().getResource(resourceString));
-        }
     }
 }

@@ -9,7 +9,8 @@ public enum TorrentType implements HasIdValue {
     LOST_FILM(1L, "lostfilm"),
     NNM_CLUB(2L, "nnmclub"),
     RUTRACKER(3L, "rutracker"),
-    NEW_STUDIO(4L, "newstudio");
+    NEW_STUDIO(4L, "newstudio"),
+    VO_PRODUCTION(5L, "vo-production");
 
     private Long id;
     private String name;
