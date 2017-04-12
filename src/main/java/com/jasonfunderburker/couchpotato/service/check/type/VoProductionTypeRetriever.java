@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -91,15 +93,16 @@ public class VoProductionTypeRetriever extends BaseTypeRetriever {
 
         HtmlPage page = webClient.getPage(item.getLink());
         List<DomElement> allLinks = page.getElementsByTagName("a");
-        Stream<DomElement> allDownloadLinks = allLinks.stream()
-                .filter(link -> link.getAttribute("href").startsWith("http://vo-production.com/informer/Torrent/"));
+        List<DomElement> allDownloadLinks = allLinks.stream()
+                .filter(link -> link.getAttribute("href").startsWith("http://vo-production.com/informer/Torrent/"))
+                .collect(Collectors.toList());
 
-        Optional<DomElement> hdDownloadLink = allDownloadLinks
+        Optional<DomElement> hdDownloadLink = allDownloadLinks.stream()
                 .filter(link -> link.getAttribute("href").contains("1080p"))
                 .findFirst();
 
         if (!hdDownloadLink.isPresent()) {
-            hdDownloadLink = allDownloadLinks
+            hdDownloadLink = allDownloadLinks.stream()
                     .filter(link -> link.getAttribute("href").contains("720p") || !link.getAttribute("href").contains("rip"))
                     .findFirst();
         }
