@@ -91,7 +91,7 @@ public class VoProductionTypeRetriever extends BaseTypeRetriever {
             throw new TorrentDownloadException("Trying to download torrent before checking RSS");
         }
 
-        HtmlPage page = webClient.getPage(item.getLink());
+        HtmlPage page = webClient.getPage(seasonLink);
         List<DomElement> allLinks = page.getElementsByTagName("a");
         List<DomElement> allDownloadLinks = allLinks.stream()
                 .filter(link -> link.getAttribute("href").startsWith("http://vo-production.com/informer/Torrent/"))
