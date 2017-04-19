@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
 import com.jasonfunderburker.couchpotato.entities.TorrentState;
 import com.jasonfunderburker.couchpotato.entities.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
@@ -59,11 +60,12 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
         HtmlElement formElement = page1.getHtmlElementById("login-form-quick");
         if (formElement instanceof HtmlForm) {
             HtmlForm form = (HtmlForm)formElement;
-            form.getInputByName("login_username").type(item.getUserInfo().getUsername());
-            String password = item.getUserInfo().getPassword();
-            if (password == null)
-                throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
-            form.getInputByName("login_password").type(password);
+            TorrentUserInfo userInfo = item.getUserInfo();
+            if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
+                throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
+            }
+            form.getInputByName("login_username").type(userInfo.getUsername());
+            form.getInputByName("login_password").type(userInfo.getPassword());
             Page page = form.getInputByName("login").click();
             if (!page.getWebResponse().getContentAsString().contains("logged-in-as-uname")) {
                 logger.trace("page after login: {}", page.getWebResponse().getContentAsString());

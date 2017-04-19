@@ -23,6 +23,8 @@ public class TorrentUserInfo {
 
     private String username;
     private String hash;
+
+    @Transient
     private String clearHash;
 
     public TorrentUserInfo() {

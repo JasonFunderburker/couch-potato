@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
 import com.jasonfunderburker.couchpotato.entities.TorrentState;
 import com.jasonfunderburker.couchpotato.entities.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
@@ -53,14 +54,17 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         logger.trace("loginPage: {}", loginPage.asText());
         HtmlForm form = (HtmlForm)loginPage.getElementById("loginFrm");
         logger.debug("loginForm: {}", form.asText());
-        logger.debug("userName: {}", item.getUserInfo().getUsername());
-        form.getInputByName("username").type(item.getUserInfo().getUsername());
-        String password = item.getUserInfo().getPassword();
-        if (password == null) throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
+        TorrentUserInfo userInfo = item.getUserInfo();
+        if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
+            throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
+        }
+        logger.debug("userName: {}", userInfo.getUsername());
+        form.getInputByName("username").type(userInfo.getUsername());
+        String password = userInfo.getPassword();
         logger.debug("password: {}", password);
-        form.getInputByName("password").type(password);
+        form.getInputByName("password").type(userInfo.getPassword());
         Page page = form.getInputByName("login").click();
-        if (!page.getWebResponse().getContentAsString().contains(item.getUserInfo().getUsername())) {
+        if (!page.getWebResponse().getContentAsString().contains(userInfo.getUsername())) {
             logger.trace("page after login: {}", page.getWebResponse().getContentAsString());
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         }

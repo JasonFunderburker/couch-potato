@@ -2,6 +2,7 @@ package com.jasonfunderburker.couchpotato.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Created by JasonFunderburker on 01.09.2016
@@ -10,6 +11,8 @@ import javax.persistence.Embeddable;
 public class TorrentState {
     @Column(name = "state")
     private String state;
+
+    @Transient
     private String info;
 
     public String getState() {
