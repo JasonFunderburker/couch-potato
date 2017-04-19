@@ -1,7 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;

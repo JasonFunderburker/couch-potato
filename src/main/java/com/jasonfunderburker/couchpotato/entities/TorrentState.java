@@ -1,9 +1,14 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * Created by JasonFunderburker on 01.09.2016
  */
+@Embeddable
 public class TorrentState {
+    @Column(name = "state")
     private String state;
     private String info;
 

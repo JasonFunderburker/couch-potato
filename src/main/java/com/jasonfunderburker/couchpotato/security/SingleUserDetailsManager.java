@@ -1,6 +1,6 @@
 package com.jasonfunderburker.couchpotato.security;
 
-import com.jasonfunderburker.couchpotato.domain.UserImpl;
+import com.jasonfunderburker.couchpotato.entities.UserImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;

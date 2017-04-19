@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.dao.mybatis.handler;
+package com.jasonfunderburker.couchpotato.entities.converters;
 
 /**
  * Created by JasonFunderburker on 16.09.2016

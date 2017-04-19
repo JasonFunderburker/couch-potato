@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.controller;
 
-import com.jasonfunderburker.couchpotato.domain.ScheduleSettings;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.ScheduleSettings;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

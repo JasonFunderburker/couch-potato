@@ -1,8 +1,8 @@
 package com.jasonfunderburker.couchpotato.service.rss;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeedMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

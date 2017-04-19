@@ -1,11 +1,11 @@
 package com.jasonfunderburker.couchpotato.service.torrents;
 
-import com.jasonfunderburker.couchpotato.dao.AccountsDao;
-import com.jasonfunderburker.couchpotato.dao.TorrentItemDao;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
-import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.repositories.AccountRepository;
+import com.jasonfunderburker.couchpotato.repositories.TorrentRepository;
 import com.jasonfunderburker.couchpotato.service.check.TorrentCheckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +25,19 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     private static Logger logger = LoggerFactory.getLogger(TorrentsItemServiceImpl.class);
 
     @Autowired
-    TorrentItemDao torrentItemDao;
-    @Autowired
-    AccountsDao accountsDao;
-    @Autowired
     TorrentCheckService checkService;
 
+    private final AccountRepository accountRepo;
+    private final TorrentRepository torrentRepo;
 
     private volatile Date checkStartDate = null;
     private volatile Date checkEndDate = null;
+
+    @Autowired
+    public TorrentsItemServiceImpl(AccountRepository accountRepo, TorrentRepository torrentRepo) {
+        this.accountRepo = accountRepo;
+        this.torrentRepo = torrentRepo;
+    }
 
     @Override
     public Date getCheckStartDate() {
@@ -47,26 +51,26 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
 
     @Override
     public List<TorrentItem> getItemsList() {
-        return torrentItemDao.getItemsList();
+        return torrentRepo.findAll();
     }
 
     @Override
     public List<TorrentItem> findByStatus(TorrentStatus status) {
-        return torrentItemDao.findByStatus(status);
+        return torrentRepo.findByStatus(status);
     }
 
     @Override
     public void checkItem(TorrentItem item) {
         logger.debug("checkItem: {}", item);
         checkService.check(item);
-        torrentItemDao.updateItem(item);
+        torrentRepo.saveAndFlush(item);
         logger.debug("changed item: {}", item);
     }
 
     @Override
     public void checkItem(long id) {
         logger.debug("checkItem id: {}", id);
-        TorrentItem item = torrentItemDao.findById(id);
+        TorrentItem item = torrentRepo.findOne(id);
         if (item != null) checkItem(item);
     }
 
@@ -82,15 +86,14 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     public void addItemToList(TorrentItem item) throws IllegalArgumentException {
         logger.debug("add item: {}", item);
         item.setLink(item.getLink().replace("www.",""));
-        item.setType(getTypeNameFromLink(item.getLink()));
-        item.setUserInfo(getUserInfoByType(item.getType()));
+        item.setUserInfo(getUserInfoByType(getTypeNameFromLink(item.getLink())));
         checkService.check(item);
-        torrentItemDao.addItemToList(item);
+        torrentRepo.saveAndFlush(item);
     }
 
     @Override
     public void deleteItemFromList(long id) {
-        torrentItemDao.deleteItemFromList(id);
+        torrentRepo.delete(id);
     }
 
     private TorrentType getTypeNameFromLink(String link) {
@@ -113,7 +116,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     }
 
     private TorrentUserInfo getUserInfoByType(TorrentType type) {
-        TorrentUserInfo userInfo = accountsDao.getUserInfo(type.getId());
+        TorrentUserInfo userInfo = accountRepo.findByType(type);
         if (userInfo == null) throw new IllegalArgumentException("Invalid credentials: please add user information in settings");
         return userInfo;
     }

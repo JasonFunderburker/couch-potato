@@ -1,19 +1,42 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
 
+import com.jasonfunderburker.couchpotato.entities.converters.TorrentStatusConverter;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
  */
+@Entity
+@Table(name = "torrents_list")
 public class TorrentItem implements Serializable {
+    @Id
+    @GeneratedValue
     private Long id;
+
     private String name;
     private String link;
+
+    @Column(name = "status_id")
+    @Convert(converter = TorrentStatusConverter.class)
     private TorrentStatus status;
+
+    @Embedded
     private TorrentState state;
+/*
+    @Column(name = "type_id")
+    @Convert(converter = TorrentTypeConverter.class)
     private TorrentType type;
+*/
+    @Column(name = "error_text")
     private String errorText;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     private TorrentUserInfo userInfo;
+
+    @Column(name = "file_name")
     private String fileName;
 
     public Long getId() {
@@ -55,7 +78,7 @@ public class TorrentItem implements Serializable {
     public void setState(TorrentState state) {
         this.state = state;
     }
-
+/*
     public TorrentType getType() {
         return type;
     }
@@ -63,7 +86,7 @@ public class TorrentItem implements Serializable {
     public void setType(TorrentType type) {
         this.type = type;
     }
-
+*/
     public String getErrorText() {
         return errorText;
     }
@@ -96,7 +119,7 @@ public class TorrentItem implements Serializable {
                 ", link='" + link + '\'' +
                 ", status=" + status +
                 ", state=" + state +
-                ", type=" + type +
+//                ", type=" + type +
                 ", errorText='" + errorText + '\'' +
                 ", userInfo=" + userInfo +
                 ", fileName='" + fileName + '\'' +

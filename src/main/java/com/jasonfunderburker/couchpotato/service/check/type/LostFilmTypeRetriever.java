@@ -5,12 +5,12 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
-import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeedMessage;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeedMessage;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
                 downloadLink = new URL(rssItem.get().getLink().trim());
             }
             if (downloadLink == null) throw new TorrentRetrieveException("link for '1080p' is not found");
-            webClient.addCookie("uid=" + item.getUserInfo().getUserName(), downloadLink, null);
+            webClient.addCookie("uid=" + item.getUserInfo().getUsername(), downloadLink, null);
             webClient.addCookie("usess=" + item.getUserInfo().getPassword(), downloadLink, null);
         }
         else throw new TorrentDownloadException("Error getting download URL, cause title for search is null");
@@ -107,7 +107,7 @@ public class LostFilmTypeRetriever extends BaseTypeRetriever {
     @Override
     public void login(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
         TorrentUserInfo userInfo = item.getUserInfo();
-        if (userInfo.getUserName() == null || userInfo.getPassword() == null) {
+        if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
         }
     }

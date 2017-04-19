@@ -2,9 +2,9 @@ package com.jasonfunderburker.couchpotato.controller;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
 import com.jasonfunderburker.couchpotato.security.SingleUserDetailsManager;
 import com.jasonfunderburker.couchpotato.service.rss.RSSFeedGeneratorService;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;

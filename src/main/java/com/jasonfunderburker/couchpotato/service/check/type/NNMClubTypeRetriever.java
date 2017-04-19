@@ -3,9 +3,9 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
@@ -53,14 +53,14 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         logger.trace("loginPage: {}", loginPage.asText());
         HtmlForm form = (HtmlForm)loginPage.getElementById("loginFrm");
         logger.debug("loginForm: {}", form.asText());
-        logger.debug("userName: {}", item.getUserInfo().getUserName());
-        form.getInputByName("username").type(item.getUserInfo().getUserName());
+        logger.debug("userName: {}", item.getUserInfo().getUsername());
+        form.getInputByName("username").type(item.getUserInfo().getUsername());
         String password = item.getUserInfo().getPassword();
         if (password == null) throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         logger.debug("password: {}", password);
         form.getInputByName("password").type(password);
         Page page = form.getInputByName("login").click();
-        if (!page.getWebResponse().getContentAsString().contains(item.getUserInfo().getUserName())) {
+        if (!page.getWebResponse().getContentAsString().contains(item.getUserInfo().getUsername())) {
             logger.trace("page after login: {}", page.getWebResponse().getContentAsString());
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         }

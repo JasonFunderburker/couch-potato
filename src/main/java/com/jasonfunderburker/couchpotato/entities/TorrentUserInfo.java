@@ -1,16 +1,27 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
 
+import com.jasonfunderburker.couchpotato.entities.converters.TorrentTypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import javax.persistence.*;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@Entity
+@Table(name = "torrents_accounts")
 public class TorrentUserInfo {
-    private Long torrentTypeId;
-    private String userName;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "type_id")
+    @Convert(converter = TorrentTypeConverter.class)
+    private TorrentType type;
+
+    private String username;
     private String hash;
     private String clearHash;
 
@@ -18,25 +29,37 @@ public class TorrentUserInfo {
         super();
     }
 
+    public TorrentUserInfo(TorrentType type) {
+        this.type = type;
+    }
+
     public TorrentUserInfo(String userName, String password) {
-        this.userName = userName;
+        this.username = userName;
         setHash(password);
     }
 
-    public Long getTorrentTypeId() {
-        return torrentTypeId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTorrentTypeId(Long torrentTypeId) {
-        this.torrentTypeId = torrentTypeId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public TorrentType getType() {
+        return type;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setType(TorrentType type) {
+        this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getHash() {
@@ -58,8 +81,8 @@ public class TorrentUserInfo {
     @Override
     public String toString() {
         return "TorrentUserInfo{" +
-                "torrentTypeId="+ torrentTypeId + ',' +
-                "userName='" + userName + '\'' +
+                "type="+ type + ',' +
+                "username='" + username + '\'' +
                 '}';
     }
 }

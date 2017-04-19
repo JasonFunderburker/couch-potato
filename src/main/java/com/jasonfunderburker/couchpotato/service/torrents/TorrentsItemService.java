@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.torrents;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentStatus;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
 
 import java.util.Date;
 import java.util.List;

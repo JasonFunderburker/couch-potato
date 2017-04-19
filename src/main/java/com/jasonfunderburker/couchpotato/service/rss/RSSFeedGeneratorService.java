@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.rss;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
 
 import java.util.List;
 

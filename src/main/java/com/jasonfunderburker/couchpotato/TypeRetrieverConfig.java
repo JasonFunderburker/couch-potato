@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Created on 21.03.2017
  *
- * @author Ekaterina.Bashkankova
+ * @author JasonFunderburker
  */
 @Configuration
 public class TypeRetrieverConfig {

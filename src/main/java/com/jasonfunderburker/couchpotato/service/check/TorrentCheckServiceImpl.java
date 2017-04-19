@@ -2,8 +2,8 @@ package com.jasonfunderburker.couchpotato.service.check;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import com.jasonfunderburker.couchpotato.service.check.type.StateRetrieversDictionary;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import static com.jasonfunderburker.couchpotato.domain.TorrentStatus.*;
+import static com.jasonfunderburker.couchpotato.entities.TorrentStatus.*;
 
 /**
  * Created by JasonFunderburker on 01.09.2016
@@ -39,7 +39,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
             webClient.getOptions().setRedirectEnabled(true);
             webClient.getCookieManager().setCookiesEnabled(true);
 
-            TorrentRetriever torrentRetriever = stateRetrieversDictionary.getRetrieverType(item.getType());
+            TorrentRetriever torrentRetriever = stateRetrieversDictionary.getRetrieverType(item.getUserInfo().getType());
             if (torrentRetriever != null) {
                 if (torrentRetriever.getProxyConfig() != null) {
                     webClient.getOptions().setProxyConfig(torrentRetriever.getProxyConfig());
@@ -67,7 +67,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                 }
             } else {
                 item.setStatus(ERROR);
-                item.setErrorText("TorrentRetriever for type=" + item.getType().getName() + " is not found");
+                item.setErrorText("TorrentRetriever for type=" + item.getUserInfo().getType().getName() + " is not found");
             }
         } catch (MalformedURLException e) {
             item.setStatus(ERROR);

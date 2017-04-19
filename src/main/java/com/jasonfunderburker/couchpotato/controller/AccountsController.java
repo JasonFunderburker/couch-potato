@@ -1,6 +1,6 @@
 package com.jasonfunderburker.couchpotato.controller;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.service.accounts.TorrentsAccountsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class AccountsController {
 
     @RequestMapping(value = "/torrentType/{id}/account", method = RequestMethod.POST)
     public String addTorrentAccount(@PathVariable("id")long id, TorrentUserInfo userInfo, ModelMap model) {
-        userInfo.setTorrentTypeId(id);
+        userInfo.setType(accountsService.getTypeById(id));
         accountsService.addTorrentAccount(userInfo);
         return "redirect:/settings";
     }

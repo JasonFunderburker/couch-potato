@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
 
 /**
  * Created by JasonFunderburker on 24.10.2016

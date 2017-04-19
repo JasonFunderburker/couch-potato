@@ -2,9 +2,9 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.jasonfunderburker.couchpotato.HtmlUtils;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
-import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

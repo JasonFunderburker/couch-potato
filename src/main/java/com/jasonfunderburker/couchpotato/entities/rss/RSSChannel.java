@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.domain.rss;
+package com.jasonfunderburker.couchpotato.entities.rss;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

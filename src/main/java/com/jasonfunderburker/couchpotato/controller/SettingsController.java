@@ -1,6 +1,6 @@
 package com.jasonfunderburker.couchpotato.controller;
 
-import com.jasonfunderburker.couchpotato.domain.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.service.accounts.TorrentsAccountsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

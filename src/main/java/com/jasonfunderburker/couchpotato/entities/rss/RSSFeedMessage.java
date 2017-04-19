@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.domain.rss;
+package com.jasonfunderburker.couchpotato.entities.rss;
 
 import java.util.Date;
 

@@ -5,9 +5,9 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
         HtmlElement formElement = page1.getHtmlElementById("login-form-quick");
         if (formElement instanceof HtmlForm) {
             HtmlForm form = (HtmlForm)formElement;
-            form.getInputByName("login_username").type(item.getUserInfo().getUserName());
+            form.getInputByName("login_username").type(item.getUserInfo().getUsername());
             String password = item.getUserInfo().getPassword();
             if (password == null)
                 throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");

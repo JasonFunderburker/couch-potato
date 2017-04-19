@@ -1,6 +1,6 @@
-package com.jasonfunderburker.couchpotato.domain;
+package com.jasonfunderburker.couchpotato.entities;
 
-import com.jasonfunderburker.couchpotato.dao.mybatis.handler.HasIdValue;
+import com.jasonfunderburker.couchpotato.entities.converters.HasIdValue;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
@@ -18,7 +18,6 @@ public enum TorrentType implements HasIdValue {
     private TorrentType(Long id, String name) {
         this.id = id;
         this.name = name;
-
     }
     @Override
     public Long getId() {

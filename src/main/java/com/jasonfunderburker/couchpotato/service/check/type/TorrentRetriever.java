@@ -2,9 +2,9 @@ package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.jasonfunderburker.couchpotato.domain.TorrentItem;
-import com.jasonfunderburker.couchpotato.domain.TorrentState;
-import com.jasonfunderburker.couchpotato.domain.TorrentType;
+import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.TorrentState;
+import com.jasonfunderburker.couchpotato.entities.TorrentType;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 
 import java.io.IOException;
