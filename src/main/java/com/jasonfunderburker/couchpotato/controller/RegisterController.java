@@ -1,11 +1,10 @@
 package com.jasonfunderburker.couchpotato.controller;
 
-import com.jasonfunderburker.couchpotato.security.SingleUserDetailsManager;
+import com.jasonfunderburker.couchpotato.entities.Authority;
+import com.jasonfunderburker.couchpotato.entities.UserDO;
+import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,16 +25,15 @@ public class RegisterController {
 
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    private final SingleUserDetailsManager userDetails;
+    private final SingleUserRepository userRepository;
 
-    @Autowired
-    public RegisterController(SingleUserDetailsManager userDetails) {
-        this.userDetails = userDetails;
+    public RegisterController(SingleUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerPage(ModelMap model) {
-        if (userDetails.anyUserExist())
+        if (userRepository.anyUserExist())
             return "redirect:/login";
         model.addAttribute("username", "");
         model.addAttribute("password", "");
@@ -44,8 +42,8 @@ public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(String username, String password) {
-        if (!userDetails.anyUserExist()) {
-            userDetails.createUser(new User(username, encoder.encode(password), Collections.singletonList(new SimpleGrantedAuthority("USER"))));
+        if (!userRepository.anyUserExist()) {
+            userRepository.saveAndFlush(new UserDO(username, encoder.encode(password), Collections.singletonList(new Authority("ROLE_USER"))));
             logger.debug("User created: {}", username);
         }
         return "redirect:/login";

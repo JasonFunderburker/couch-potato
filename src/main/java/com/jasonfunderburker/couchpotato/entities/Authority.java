@@ -2,10 +2,7 @@ package com.jasonfunderburker.couchpotato.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created on 19.04.2017
@@ -18,9 +15,17 @@ public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue
     private Long id;
-
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserDO user;
     private String authority;
+
+    public Authority() {
+    }
+
+    public Authority(String authority) {
+        this.authority = authority;
+    }
 
     public Long getId() {
         return id;
@@ -30,14 +35,15 @@ public class Authority implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public UserDO getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(UserDO user) {
+        this.user = user;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
 import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
+import com.jasonfunderburker.couchpotato.entities.UserDO;
+import com.jasonfunderburker.couchpotato.entities.UserPrincipal;
 import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
-import com.jasonfunderburker.couchpotato.security.SingleUserDetailsManager;
+import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import com.jasonfunderburker.couchpotato.service.rss.RSSFeedGeneratorService;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
 import org.apache.commons.io.IOUtils;
@@ -39,13 +41,13 @@ public class RSSController {
 
     private final RSSFeedGeneratorService feedGeneratorService;
     private final TorrentsItemService itemService;
-    private final SingleUserDetailsManager userDetails;
+    private final SingleUserRepository userRepository;
 
     @Autowired
-    public RSSController(RSSFeedGeneratorService feedGeneratorService, TorrentsItemService itemService, SingleUserDetailsManager userDetails) {
+    public RSSController(RSSFeedGeneratorService feedGeneratorService, TorrentsItemService itemService, SingleUserRepository userRepository) {
         this.feedGeneratorService = feedGeneratorService;
         this.itemService = itemService;
-        this.userDetails = userDetails;
+        this.userRepository = userRepository;
         xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
         xmlMapper.setDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"));
     }
@@ -65,7 +67,9 @@ public class RSSController {
     public String generateRssPublicUrl(HttpServletRequest request, ModelMap modelMap, RedirectAttributes redirectAttributes) {
         String generatedString = generatePublicString();
         logger.debug("generatedString={}", generatedString);
-        userDetails.saveRssPublicString(getUserName(), generatedString);
+        UserDO userDO = getUser();
+        userDO.setRssPublic(generatedString);
+        userRepository.save(userDO);
         String generatedRssUrl = request.getRequestURL() + "/" + generatedString;
         logger.debug("generatedRssUrl={}", generatedRssUrl);
         redirectAttributes.addFlashAttribute("generatedRssUrl", generatedRssUrl);
@@ -75,14 +79,16 @@ public class RSSController {
 
     @RequestMapping(value = "/public/{rssUrl}", method = RequestMethod.GET)
     public void getPublicRss(HttpServletRequest request, HttpServletResponse response, @PathVariable("rssUrl") String rssUrl) throws IOException {
-        if (userDetails.isCorrectRssPublicString(rssUrl)) {
+        if (rssUrl.equals(getUser().getRssPublic())) {
             generateRssContent(request, response);
         } else response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @RequestMapping(value = "/public/invalidate", method = RequestMethod.POST)
     public String invalidatePublicRssUrl(RedirectAttributes redirectAttributes) {
-        userDetails.saveRssPublicString(getUserName(), null);
+        UserDO userDO = getUser();
+        userDO.setRssPublic(null);
+        userRepository.save(userDO);
         redirectAttributes.addFlashAttribute("invalidateResult", "successfully invalidated");
         return "redirect:/itemList";
     }
@@ -98,8 +104,8 @@ public class RSSController {
         response.getOutputStream().close();
     }
 
-    private String getUserName() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    private UserDO getUser() {
+        return ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
     }
 
     private String generatePublicString() {

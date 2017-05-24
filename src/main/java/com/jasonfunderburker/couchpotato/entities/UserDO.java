@@ -4,11 +4,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Collection;
+import javax.persistence.*;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Created on 05.03.2017
@@ -17,7 +17,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "users")
-public class UserImpl extends User {
+public class UserDO {
 
     @Id
     @GeneratedValue
@@ -25,19 +25,17 @@ public class UserImpl extends User {
     private String username;
     private String password;
     private String rssPublic;
-    private boolean enabled;
+//    private boolean enabled;
+    @OneToMany(mappedBy = "users")
+    private List<Authority> authorities = new ArrayList<>();
 
-    public UserImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
+    public UserDO() {
     }
 
-    public UserImpl(UserDetails user) {
-        super(user.getUsername(), user.getPassword(), user.getAuthorities());
-    }
-
-    public UserImpl(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, String rssPublic) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.rssPublic = rssPublic;
+    public UserDO(String username, String password, List<Authority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
     }
 
     public Long getId() {
@@ -56,7 +54,6 @@ public class UserImpl extends User {
         this.rssPublic = rssPublic;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -65,7 +62,6 @@ public class UserImpl extends User {
         this.username = username;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -74,12 +70,23 @@ public class UserImpl extends User {
         this.password = password;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+//    public boolean isEnabled() {
+//        return enabled;
+//    }
+
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public List<String> getAuthorityNames() {
+        return authorities.stream().map(Authority::getAuthority).collect(toList());
     }
 }
