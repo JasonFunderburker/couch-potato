@@ -26,7 +26,7 @@ public class UserDO {
     private String password;
     private String rssPublic;
 //    private boolean enabled;
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Authority> authorities = new ArrayList<>();
 
     public UserDO() {
