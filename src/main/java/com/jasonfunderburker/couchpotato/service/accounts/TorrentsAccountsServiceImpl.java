@@ -26,7 +26,7 @@ public class TorrentsAccountsServiceImpl implements TorrentsAccountsService {
             torrentTypeMap.put(t.getId(), t);
             accounts.add(new TorrentUserInfo(t));
         });
-        accountRepo.save(accounts);
+        accountRepo.saveIfNotExists(accounts);
         accountRepo.flush();
     }
 

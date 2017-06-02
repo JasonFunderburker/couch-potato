@@ -15,7 +15,7 @@ public class UserPrincipal extends User {
     private UserDO user;
 
     public UserPrincipal(UserDO user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUsername(), user.getPassword(), authorities);
+        super(user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
         this.user = user;
     }
 

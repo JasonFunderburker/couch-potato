@@ -25,7 +25,7 @@ public class UserDO {
     private String username;
     private String password;
     private String rssPublic;
-//    private boolean enabled;
+    private boolean enabled;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Authority> authorities = new ArrayList<>();
 
@@ -36,6 +36,7 @@ public class UserDO {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.enabled = true;
     }
 
     public Long getId() {
@@ -70,13 +71,13 @@ public class UserDO {
         this.password = password;
     }
 
-//    public boolean isEnabled() {
-//        return enabled;
-//    }
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-//    public void setEnabled(boolean enabled) {
-//        this.enabled = enabled;
-//    }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public List<Authority> getAuthorities() {
         return authorities;

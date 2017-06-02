@@ -17,7 +17,7 @@ public class TorrentUserInfo {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "type_id", unique = true)
+    @Column(name = "type_id")
     @Convert(converter = TorrentTypeConverter.class)
     private TorrentType type;
 
