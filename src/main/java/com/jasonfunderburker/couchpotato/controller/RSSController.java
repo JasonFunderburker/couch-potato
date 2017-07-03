@@ -79,7 +79,7 @@ public class RSSController {
 
     @RequestMapping(value = "/public/{rssUrl}", method = RequestMethod.GET)
     public void getPublicRss(HttpServletRequest request, HttpServletResponse response, @PathVariable("rssUrl") String rssUrl) throws IOException {
-        if (rssUrl.equals(getUser().getRssPublic())) {
+        if (userRepository.isCorrectRssString(rssUrl)) {
             generateRssContent(request, response);
         } else response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }

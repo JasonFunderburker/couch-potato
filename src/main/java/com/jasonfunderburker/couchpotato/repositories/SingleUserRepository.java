@@ -12,7 +12,13 @@ public interface SingleUserRepository extends JpaRepository<UserDO, Long> {
 
     UserDO findByUsername(String username);
 
+    UserDO findByRssPublic(String rssPublic);
+
     default boolean anyUserExist() {
         return count() > 0;
+    }
+
+    default boolean isCorrectRssString(String rssString) {
+        return findByRssPublic(rssString) != null;
     }
 }

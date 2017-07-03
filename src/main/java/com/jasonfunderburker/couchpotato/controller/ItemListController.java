@@ -2,6 +2,9 @@ package com.jasonfunderburker.couchpotato.controller;
 
 import com.jasonfunderburker.couchpotato.entities.ScheduleSettings;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
+import com.jasonfunderburker.couchpotato.entities.UserDO;
+import com.jasonfunderburker.couchpotato.entities.util.CryptMaster;
+import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -22,14 +26,16 @@ public class ItemListController {
 
     private final TorrentsItemService itemService;
     private final TaskScheduler scheduler;
+    private final SingleUserRepository userRepository;
 
     private ScheduleSettings scheduleSettings = new ScheduleSettings();
     private ScheduledFuture scheduledFuture;
 
     @Autowired
-    public ItemListController(TorrentsItemService itemService, TaskScheduler scheduler) {
+    public ItemListController(TorrentsItemService itemService, TaskScheduler scheduler, SingleUserRepository userRepository) {
         this.itemService = itemService;
         this.scheduler = scheduler;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -38,7 +44,7 @@ public class ItemListController {
     }
 
 	@RequestMapping(value = "/itemList", method = RequestMethod.GET)
-	public String showItemList(ModelMap model) {
+	public String showItemList(ModelMap model, Principal principal) {
         List<TorrentItem> torrentItemsList = itemService.getItemsList();
 		model.addAttribute("message", "Hi, I'm couch potato, so i wrote this app cause i want to lay on my soft comfy coach and doing nothing when new episode of my favorite show is coming");
         model.addAttribute("itemList", torrentItemsList);
@@ -46,6 +52,9 @@ public class ItemListController {
         model.addAttribute("scheduleSettings", scheduleSettings);
         model.addAttribute("checkStartDate", itemService.getCheckStartDate());
         model.addAttribute("checkEndDate", itemService.getCheckEndDate());
+        UserDO userDO = userRepository.findByUsername(principal.getName());
+        logger.debug("set key={}",userDO.getPassword());
+        CryptMaster.setKey(userDO.getPassword());
         if (!model.containsAttribute("generatedRssUrl")) model.addAttribute("generatedRssUrl","");
         logger.trace("modelMap: {}",model);
 		return "itemList";

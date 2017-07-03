@@ -38,25 +38,30 @@
     </div>
 </div>
 <div class="container">
-    <table class="item-table">
+    <table class="item-table .table-striped">
         <tbody>
         <tr th:each="torrentType: ${torrentTypes}">
             <td>
                 <form action="#" th:action="@{./torrentType/{id}/account(id=${torrentType.id})}" th:object="${userInfo}"
                       method="post">
                     <div>
-                        <label th:text="${torrentType.name}">Torrent type</label>
+                        <label th:text="${torrentType.type.name}">Torrent type</label>
                     </div>
                     <div>
-                        <label th:text="(${torrentType.name() == 'LOST_FILM'}) ? ('UserId') : ('Username')">UserName</label>
+                        <label th:text="(${torrentType.type.name() == 'LOST_FILM'}) ? ('UserId') : ('Username')">UserName</label>
                     </div>
-                    <input type="text" th:field="*{username}"/>
+                    <input th:disabled="(${torrentType.hash} ? ${true} : ${false})" type="text" th:field="*{username}"/>
                     <div>
-                        <label th:text="(${torrentType.name() == 'LOST_FILM'}) ? ('Usess') : ('Password')">Password</label>
+                        <label th:text="(${torrentType.type.name() == 'LOST_FILM'}) ? ('Usess') : ('Password')">Password</label>
                     </div>
-                    <input type="password" th:field="*{hash}"/>
-                    <button type="submit" class="button">Save</button>
+                    <input th:disabled="(${torrentType.hash} ? ${true} : ${false})" type="password" th:field="*{hash}"/>
+                    <button th:disabled="(${torrentType.hash} ? ${true} : ${false})" type="submit" class="button">Save</button>
                 </form>
+            </td>
+            <td>
+                <div th:hidden="(${torrentType.hash} ? ${false} : ${true})" >
+                    <label>Account saved already</label>
+                </div>
             </td>
         </tr>
         </tbody>

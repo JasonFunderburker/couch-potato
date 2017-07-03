@@ -24,11 +24,7 @@ public class TorrentItem implements Serializable {
 
     @Embedded
     private TorrentState state;
-/*
-    @Column(name = "type_id")
-    @Convert(converter = TorrentTypeConverter.class)
-    private TorrentType type;
-*/
+
     @Column(name = "error_text")
     private String errorText;
 
@@ -38,6 +34,19 @@ public class TorrentItem implements Serializable {
 
     @Column(name = "file_name")
     private String fileName;
+
+    public TorrentItem() {
+    }
+
+    public TorrentItem(TorrentItem item) {
+        this.name = item.name;
+        this.link = item.link;
+        this.status = item.status;
+        this.state = item.state;
+        this.errorText = item.errorText;
+        this.userInfo = item.userInfo;
+        this.fileName = item.fileName;
+    }
 
     public Long getId() {
         return id;
@@ -78,15 +87,7 @@ public class TorrentItem implements Serializable {
     public void setState(TorrentState state) {
         this.state = state;
     }
-/*
-    public TorrentType getType() {
-        return type;
-    }
 
-    public void setType(TorrentType type) {
-        this.type = type;
-    }
-*/
     public String getErrorText() {
         return errorText;
     }

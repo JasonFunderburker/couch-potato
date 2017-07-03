@@ -1,6 +1,7 @@
 package com.jasonfunderburker.couchpotato.controller;
 
 import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.repositories.AccountRepository;
 import com.jasonfunderburker.couchpotato.service.accounts.TorrentsAccountsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +17,18 @@ public class SettingsController {
     private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
 
     private final TorrentsAccountsService accountsService;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public SettingsController(TorrentsAccountsService accountsService) {
+    public SettingsController(TorrentsAccountsService accountsService, AccountRepository accountRepository) {
         this.accountsService = accountsService;
+        this.accountRepository = accountRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String getSettings(ModelMap model) {
         logger.debug("All torrent types: {}", accountsService.getAllTorrentTypes());
-        model.addAttribute("torrentTypes", accountsService.getAllTorrentTypes());
+        model.addAttribute("torrentTypes", accountRepository.findAll());
         model.addAttribute("userInfo", new TorrentUserInfo());
         return "settings";
     }
