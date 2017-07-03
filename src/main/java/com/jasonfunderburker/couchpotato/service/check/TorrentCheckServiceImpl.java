@@ -56,7 +56,9 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                     if (!newState.equals(item.getState()) || item.getStatus().equals(DOWNLOAD_ERROR)) {
                         item.setStatus(item.getStatus().equals(DOWNLOAD_ERROR) ? RELOADED : REFRESHED);
                         item.setErrorText(null);
-                        String fileName = torrentRetriever.download(item, webClient);
+                        TorrentItem itemWithNewState = new TorrentItem(item);
+                        itemWithNewState.setState(newState);
+                        String fileName = torrentRetriever.download(itemWithNewState, webClient);
                         item.setFileName(fileName);
                         item.setStatus(DOWNLOADED);
                         item.setState(newState);
