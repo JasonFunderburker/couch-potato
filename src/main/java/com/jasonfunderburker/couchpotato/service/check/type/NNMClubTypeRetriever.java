@@ -1,6 +1,7 @@
 package com.jasonfunderburker.couchpotato.service.check.type;
 
 import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
@@ -11,6 +12,7 @@ import com.jasonfunderburker.couchpotato.exceptions.TorrentDownloadException;
 import com.jasonfunderburker.couchpotato.exceptions.TorrentRetrieveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,6 +25,9 @@ import java.net.URL;
 public class NNMClubTypeRetriever extends BaseTypeRetriever {
     private static final Logger logger = LoggerFactory.getLogger(NNMClubTypeRetriever.class);
     private static final String LOGIN_PAGE = "https://nnmclub.to/forum/login.php";
+
+    @Autowired
+    private ProxyConfig proxyConfig;
 
     @Override
     public URL getDownloadLink(TorrentItem item, WebClient webClient) throws TorrentRetrieveException, IOException {
@@ -69,6 +74,11 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your credentials on setting page");
         }
         logger.trace("page: {}", page instanceof HtmlPage ? ((HtmlPage) page).asText() : "");
+    }
+
+    @Override
+    public ProxyConfig getProxyConfig() {
+        return proxyConfig;
     }
 
     @Override
