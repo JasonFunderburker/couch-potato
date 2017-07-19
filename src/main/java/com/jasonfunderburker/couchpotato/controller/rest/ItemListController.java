@@ -1,9 +1,7 @@
-package com.jasonfunderburker.couchpotato.controller;
+package com.jasonfunderburker.couchpotato.controller.rest;
 
 import com.jasonfunderburker.couchpotato.entities.ScheduleSettings;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
-import com.jasonfunderburker.couchpotato.entities.UserDO;
-import com.jasonfunderburker.couchpotato.entities.util.CryptMaster;
 import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
 import org.slf4j.Logger;
@@ -11,91 +9,64 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class ItemListController {
     private static final Logger logger = LoggerFactory.getLogger(ItemListController.class);
 
     private final TorrentsItemService itemService;
     private final TaskScheduler scheduler;
-    private final SingleUserRepository userRepository;
 
     private ScheduleSettings scheduleSettings = new ScheduleSettings();
     private ScheduledFuture scheduledFuture;
 
     @Autowired
-    public ItemListController(TorrentsItemService itemService, TaskScheduler scheduler, SingleUserRepository userRepository) {
+    public ItemListController(TorrentsItemService itemService, TaskScheduler scheduler) {
         this.itemService = itemService;
         this.scheduler = scheduler;
-        this.userRepository = userRepository;
     }
-
+/*
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap model) {
         return "redirect:/itemList";
-    }
+    } */
 
 	@RequestMapping(value = "/itemList", method = RequestMethod.GET)
-	public String showItemList(ModelMap model, Principal principal) {
-        List<TorrentItem> torrentItemsList = itemService.getItemsList();
-		model.addAttribute("message", "Hi, I'm couch potato, so i wrote this app cause i want to lay on my soft comfy coach and doing nothing when new episode of my favorite show is coming");
-        model.addAttribute("itemList", torrentItemsList);
-        model.addAttribute("torrentItem", new TorrentItem());
-        model.addAttribute("scheduleSettings", scheduleSettings);
-        model.addAttribute("checkStartDate", itemService.getCheckStartDate());
-        model.addAttribute("checkEndDate", itemService.getCheckEndDate());
-        UserDO userDO = userRepository.findByUsername(principal.getName());
-        logger.debug("set key={}",userDO.getPassword());
-        CryptMaster.setKey(userDO.getPassword());
-        if (!model.containsAttribute("generatedRssUrl")) model.addAttribute("generatedRssUrl","");
-        logger.trace("modelMap: {}",model);
-		return "itemList";
+	public List<TorrentItem> getItemList() {
+	    return itemService.getItemsList();
 	}
 
     @RequestMapping(value = "/itemList", method = RequestMethod.POST)
-    public String addItemToList(TorrentItem torrentItem, ModelMap model) {
+    public void addItemToList(TorrentItem torrentItem) {
         logger.debug("addItemToList called");
-        try {
-            itemService.addItemToList(torrentItem);
-            model.clear();
-        }
-        catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-        return "redirect:/itemList";
+        itemService.addItemToList(torrentItem);
     }
 
-    @RequestMapping(value = "/itemList/{id}/remove", method = RequestMethod.POST)
-    public String deleteItemFromList(@PathVariable("id")long id, ModelMap model) {
+    @RequestMapping(value = "/itemList/{id}/remove", method = RequestMethod.DELETE)
+    public void deleteItemFromList(@PathVariable("id")long id) {
         logger.debug("deleteItemFromList called");
         itemService.deleteItemFromList(id);
-        return "redirect:/itemList";
     }
 
     @RequestMapping(value = "/itemList/{id}/check", method = RequestMethod.POST)
-    public String checkItemById(@PathVariable("id")long id, ModelMap model) {
+    public void checkItemById(@PathVariable("id")long id) {
         logger.debug("Check id={} now", id);
         itemService.checkItem(id);
-        return "redirect:/itemList";
     }
 
     @RequestMapping(value = "/itemList/checkAll", method = RequestMethod.POST)
-    public String itemListStartCheck(ModelMap model) {
+    public void itemListStartCheck() {
         logger.debug("Start check now");
         itemService.checkAllItems();
-        return "redirect:/itemList";
     }
 
     @RequestMapping(value = "/itemList/scheduleCheck", method = RequestMethod.POST)
-    public String itemListScheduleCheck(ScheduleSettings scheduleSettings) {
+    public void itemListScheduleCheck(ScheduleSettings scheduleSettings) {
         if (scheduledFuture != null) {
             scheduledFuture.cancel(false);
         }
@@ -105,6 +76,5 @@ public class ItemListController {
         String hours = timeParts[0];
         String minutes = timeParts[1];
         scheduledFuture = scheduler.schedule(itemService::checkAllItems, new CronTrigger("0 "+minutes+" "+hours+" * * *"));
-        return "redirect:/itemList";
     }
 }

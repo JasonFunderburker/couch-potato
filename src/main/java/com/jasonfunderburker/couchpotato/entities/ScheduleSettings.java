@@ -4,7 +4,7 @@ package com.jasonfunderburker.couchpotato.entities;
  * Created by JasonFunderburker on 24.10.2016
  */
 public class ScheduleSettings {
-    String scheduleTime;
+    private String scheduleTime;
 
     public String getScheduleTime() {
         return scheduleTime;

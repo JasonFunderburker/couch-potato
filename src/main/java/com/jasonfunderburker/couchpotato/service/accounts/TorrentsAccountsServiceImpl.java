@@ -41,8 +41,18 @@ public class TorrentsAccountsServiceImpl implements TorrentsAccountsService {
     }
 
     @Override
-    public void addTorrentAccount(TorrentUserInfo userInfo) {
-        logger.debug("add torrent account: " + userInfo);
-        accountRepo.saveAndFlush(userInfo);
+    public TorrentUserInfo addTorrentAccount(TorrentUserInfo userInfo) {
+        logger.debug("add torrent account: {}", userInfo);
+        return accountRepo.saveAndFlush(userInfo);
+    }
+
+    @Override
+    public TorrentUserInfo findByType(Long typeId) {
+        return accountRepo.findByType(getTypeById(typeId));
+    }
+
+    @Override
+    public List<TorrentUserInfo> getAllTorrentAccounts() {
+        return accountRepo.findAll();
     }
 }

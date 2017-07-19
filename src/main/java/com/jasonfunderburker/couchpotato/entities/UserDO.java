@@ -1,14 +1,11 @@
 package com.jasonfunderburker.couchpotato.entities;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Created on 05.03.2017
@@ -23,6 +20,7 @@ public class UserDO {
     @GeneratedValue
     private Long id;
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String rssPublic;
     private boolean enabled;
