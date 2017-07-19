@@ -1,7 +1,7 @@
 package com.jasonfunderburker.couchpotato.security;
 
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -15,10 +15,17 @@ import java.io.IOException;
  * @author
  */
 @Component
-public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class RestAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        response.addHeader("WWW-Authenticate", "Basic realm="+getRealmName());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        setRealmName("couch-potato");
+        super.afterPropertiesSet();
     }
 }
