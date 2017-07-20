@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.controller.rest;
+package com.jasonfunderburker.couchpotato.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

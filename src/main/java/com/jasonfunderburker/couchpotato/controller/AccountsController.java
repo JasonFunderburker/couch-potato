@@ -1,4 +1,4 @@
-package com.jasonfunderburker.couchpotato.controller.rest;
+package com.jasonfunderburker.couchpotato.controller;
 
 import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
 import com.jasonfunderburker.couchpotato.entities.UserDO;
