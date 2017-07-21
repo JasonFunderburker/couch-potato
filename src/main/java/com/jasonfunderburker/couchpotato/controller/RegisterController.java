@@ -24,7 +24,7 @@ import static java.util.Collections.singletonMap;
  *
  * @author JasonFunderburker
  */
-@RestController
+@RestController("/register")
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
@@ -36,7 +36,7 @@ public class RegisterController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody UserDO user) {
         if (!userRepository.anyUserExist()) {
             UserDO newUser = new UserDO(user.getUsername(), encoder.encode(user.getPassword()), singletonList(new Authority("ROLE_USER")));
@@ -48,7 +48,7 @@ public class RegisterController {
 
     }
 
-    @RequestMapping(value = "/register/check", method = RequestMethod.GET)
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
     public Map<String, Object> registerCheck() {
         return singletonMap("anyUserExist", userRepository.anyUserExist());
     }

@@ -34,7 +34,7 @@ import static java.util.Collections.singletonMap;
  * Created by JasonFunderburker on 19.10.2016
  */
 @RestController
-@RequestMapping("rss")
+@RequestMapping("/rss")
 public class RSSController {
     private static final Logger logger = LoggerFactory.getLogger(RSSController.class);
     private static String DOWNLOAD_PATH_PREFIX;

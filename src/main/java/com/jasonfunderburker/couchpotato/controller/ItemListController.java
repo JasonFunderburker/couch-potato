@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/itemList")
 public class ItemListController {
     private static final Logger logger = LoggerFactory.getLogger(ItemListController.class);
 
@@ -29,42 +29,37 @@ public class ItemListController {
         this.itemService = itemService;
         this.scheduler = scheduler;
     }
-/*
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(ModelMap model) {
-        return "redirect:/itemList";
-    } */
 
-	@RequestMapping(value = "/itemList", method = RequestMethod.GET)
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<TorrentItem> getItemList() {
 	    return itemService.getItemsList();
 	}
 
-    @RequestMapping(value = "/itemList", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public void addItemToList(TorrentItem torrentItem) {
         logger.debug("addItemToList called");
         itemService.addItemToList(torrentItem);
     }
 
-    @RequestMapping(value = "/itemList/{id}/remove", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteItemFromList(@PathVariable("id")long id) {
         logger.debug("deleteItemFromList called");
         itemService.deleteItemFromList(id);
     }
 
-    @RequestMapping(value = "/itemList/{id}/check", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/check", method = RequestMethod.POST)
     public void checkItemById(@PathVariable("id")long id) {
         logger.debug("Check id={} now", id);
         itemService.checkItem(id);
     }
 
-    @RequestMapping(value = "/itemList/checkAll", method = RequestMethod.POST)
+    @RequestMapping(value = "/checkAll", method = RequestMethod.POST)
     public void itemListStartCheck() {
         logger.debug("Start check now");
         itemService.checkAllItems();
     }
 
-    @RequestMapping(value = "/itemList/scheduleCheck", method = RequestMethod.POST)
+    @RequestMapping(value = "/scheduleCheck", method = RequestMethod.POST)
     public void itemListScheduleCheck(ScheduleSettings scheduleSettings) {
         if (scheduledFuture != null) {
             scheduledFuture.cancel(false);

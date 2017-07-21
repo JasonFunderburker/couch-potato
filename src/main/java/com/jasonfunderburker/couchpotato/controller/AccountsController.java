@@ -14,6 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/torrentType")
 public class AccountsController {
     private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
@@ -27,12 +28,12 @@ public class AccountsController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/torrentType", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<TorrentUserInfo> getTorrentTypes() {
         return accountsService.getAllTorrentAccounts();
     }
 
-    @RequestMapping(value = "/torrentType/{id}/account", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/account", method = RequestMethod.POST)
     public TorrentUserInfo addTorrentAccount(@PathVariable("id")long id, @RequestBody TorrentUserInfo userInfo, Principal principal) {
         setKey(principal.getName());
         TorrentUserInfo currentInfo = accountsService.findByType(id);
