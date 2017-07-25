@@ -19,7 +19,7 @@ public class RestAuthenticationEntryPoint extends BasicAuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.addHeader("WWW-Authenticate", "Basic realm="+getRealmName());
+        //response.addHeader("WWW-Authenticate", "Basic realm="+getRealmName());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
