@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 /**
  * Created by JasonFunderburker on 25.10.2016
@@ -46,7 +47,8 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
         TorrentState result = new TorrentState();
         HtmlTableDataCell state =  source.getFirstByXPath("//table[@class='attach bordered med']//tr[@class='row1']/td[2]");
         if (state != null) {
-            result.setState(state.asText().trim());
+            String textState = state.asText().trim().split(Pattern.quote("\n"))[0];
+            result.setState(textState);
             logger.debug("state : {}", result.getState());
         }
         else throw new TorrentRetrieveException("Error parsing state from url");
