@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jasonfunderburker</groupId>
     <artifactId>couch-potato</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>couch-potato</name>
     <parent>
@@ -93,5 +93,11 @@
 
     <build>
         <finalName>couch-potato</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 </project>
