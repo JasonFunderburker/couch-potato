@@ -1,0 +1,43 @@
+server:
+    port: 4991
+    context-path: /couch-potato
+    #ssl:
+    #  key-store:
+    #  key-store-password:
+    #  key-store-type:
+    #  key-alias:
+
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./db/couch-potato;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+###
+#   H2 Settings
+###
+  h2:
+    console:
+      enabled: true
+      path: /couch-potato/h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+
+rutracker:
+  proxyconfig:
+    proxy-host: proxy.antizapret.prostovpn.org
+    proxy-port: 3128
+
+logging:
+  file: logs/couch_potato.log
+  level:
+    com.jasonfunderburker.couchpotato: DEBUG
+    com.gargoylesoftware.htmlunit.javascript.DefaultJavaScriptErrorListener: OFF

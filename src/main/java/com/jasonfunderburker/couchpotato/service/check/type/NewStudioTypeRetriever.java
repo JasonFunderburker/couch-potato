@@ -58,7 +58,7 @@ public class NewStudioTypeRetriever extends BaseTypeRetriever {
         logger.trace("page before login: {}", page1.asText());
         HtmlForm form = page1.getFirstByXPath("//form[@class='form-signin']");
         TorrentUserInfo userInfo = item.getUserInfo();
-        if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
+        if (userInfo.getUsername() == null || userInfo.getHash() == null) {
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
         }
         form.getInputByName("login_username").type(userInfo.getUsername());

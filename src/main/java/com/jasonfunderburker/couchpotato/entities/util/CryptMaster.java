@@ -19,9 +19,13 @@ public class CryptMaster {
     private static final String ALGORITHM = "AES";
     private static byte[] KEY;
 
+    private CryptMaster(){}
+
     public static void setKey(String key) {
-        KEY = new byte[16];
-        System.arraycopy(key.getBytes(), 0, KEY, 0, KEY.length);
+        if (KEY == null) {
+            KEY = new byte[16];
+            System.arraycopy(key.getBytes(), 0, KEY, 0, KEY.length);
+        }
     }
 
     public static String encrypt(String plainText) {
@@ -55,12 +59,6 @@ public class CryptMaster {
     }
 
     private static byte[] getRawKey() {
-        if (KEY == null) {
-            SecureRandom random = new SecureRandom();
-            random.setSeed(System.currentTimeMillis());
-            KEY = new byte[16];
-            random.nextBytes(KEY);
-        }
         return KEY;
     }
 }

@@ -5,9 +5,9 @@ import com.jasonfunderburker.couchpotato.entities.UserDO;
 import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,15 +24,17 @@ import static java.util.Collections.singletonMap;
  *
  * @author JasonFunderburker
  */
-@RestController("/register")
+@RestController
+@RequestMapping("/register")
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
-
+    private final PasswordEncoder encoder;
     private final SingleUserRepository userRepository;
 
-    public RegisterController(SingleUserRepository userRepository) {
+    @Autowired
+    public RegisterController(PasswordEncoder encoder, SingleUserRepository userRepository) {
+        this.encoder = encoder;
         this.userRepository = userRepository;
     }
 

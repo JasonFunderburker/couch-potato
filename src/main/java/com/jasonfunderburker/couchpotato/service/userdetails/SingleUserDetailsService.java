@@ -2,7 +2,10 @@ package com.jasonfunderburker.couchpotato.service.userdetails;
 
 import com.jasonfunderburker.couchpotato.entities.UserDO;
 import com.jasonfunderburker.couchpotato.entities.UserPrincipal;
+import com.jasonfunderburker.couchpotato.entities.util.CryptMaster;
 import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -25,15 +28,20 @@ public class SingleUserDetailsService implements UserDetailsService {
 
     private final SingleUserRepository userRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(SingleUserDetailsService.class);
+
     @Autowired
     public SingleUserDetailsService(SingleUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
+        logger.debug("username={}", username);
         UserDO user = userRepository.findByUsername(username);
+        logger.debug("user={}", user);
         if (user == null) throw new UsernameNotFoundException("Unknown user");
+        CryptMaster.setKey(user.getPassword());
         return new UserPrincipal(user, getAuthorities(user.getAuthorityNames()));
     }
 

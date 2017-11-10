@@ -7,6 +7,7 @@ import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
 import com.jasonfunderburker.couchpotato.entities.UserDO;
 import com.jasonfunderburker.couchpotato.entities.UserPrincipal;
 import com.jasonfunderburker.couchpotato.entities.rss.RSSFeed;
+import com.jasonfunderburker.couchpotato.entities.rss.RssInfo;
 import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import com.jasonfunderburker.couchpotato.service.rss.RSSFeedGeneratorService;
 import com.jasonfunderburker.couchpotato.service.torrents.TorrentsItemService;
@@ -26,9 +27,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.util.Collections.singletonMap;
+import static java.util.Objects.nonNull;
 
 /**
  * Created by JasonFunderburker on 19.10.2016
@@ -54,32 +57,23 @@ public class RSSController {
     }
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/rss+xml; charset=UTF-8")
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/rss+xml; charset=UTF-8")
     public ResponseEntity<RSSFeed> generateRss(HttpServletRequest request) throws IOException {
         RSSFeed body = generateRssContent(request);
         return ResponseEntity.ok().body(body);
     }
 
-    @RequestMapping(value = "/generator", method = RequestMethod.GET)
-    public String getGenerator() throws IOException {
-        return "rssGenerator";
-    }
-
     @RequestMapping(value = "/public", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> generateRssPublicUrl(HttpServletRequest request) {
-        String generatedString;
+    public RssInfo generateRssPublicUrl(HttpServletRequest request) {
         UserDO userDO = getUser();
-        if (userDO.getRssPublic() == null || userDO.getRssPublic().isEmpty()) {
-            generatedString = generatePublicString();
-            userDO.setRssPublic(generatedString);
-            userRepository.save(userDO);
-        } else {
-            generatedString = userDO.getRssPublic();
-        }
+        String generatedString = userDO.getRssPublic();
         logger.debug("generatedString={}", generatedString);
-        String generatedRssUrl = request.getRequestURL() + "/" + generatedString;
+        String generatedRssUrl = null;
+        if (nonNull(generatedString) && !generatedString.isEmpty()) {
+            generatedRssUrl = request.getRequestURL() + "/" + generatedString;
+        }
         logger.debug("generatedRssUrl={}", generatedRssUrl);
-        return new ResponseEntity<>(singletonMap("generatedRssUrl", generatedRssUrl), HttpStatus.OK);
+        return new RssInfo(generatedRssUrl);
     }
 
     @RequestMapping(value = "/public/{rssUrl}", method = RequestMethod.GET, produces = "application/rss+xml; charset=UTF-8")
@@ -96,6 +90,15 @@ public class RSSController {
         UserDO userDO = getUser();
         userDO.setRssPublic(null);
         userRepository.save(userDO);
+    }
+
+    @RequestMapping(value = "/public/generate", method = RequestMethod.POST)
+    public RssInfo generatePublicRssUrl(HttpServletRequest request) {
+        UserDO userDO = getUser();
+        String generatedString = generatePublicString();
+        userDO.setRssPublic(generatedString);
+        userRepository.save(userDO);
+        return new RssInfo(request.getRequestURL() + "/" + generatedString);
     }
 
     private RSSFeed generateRssContent(HttpServletRequest request) {

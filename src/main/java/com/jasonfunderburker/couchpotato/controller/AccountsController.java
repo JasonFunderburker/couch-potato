@@ -14,18 +14,15 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/torrentType")
+@RequestMapping("/torrentTypes")
 public class AccountsController {
     private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
     private final TorrentsAccountsService accountsService;
-    private final SingleUserRepository userRepository;
-    private boolean isKeySet = false;
 
     @Autowired
-    public AccountsController(TorrentsAccountsService accountsService, SingleUserRepository userRepository) {
+    public AccountsController(TorrentsAccountsService accountsService) {
         this.accountsService = accountsService;
-        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -34,20 +31,11 @@ public class AccountsController {
     }
 
     @RequestMapping(value = "/{id}/account", method = RequestMethod.POST)
-    public TorrentUserInfo addTorrentAccount(@PathVariable("id")long id, @RequestBody TorrentUserInfo userInfo, Principal principal) {
-        setKey(principal.getName());
+    public TorrentUserInfo addTorrentAccount(@PathVariable("id")long id, @RequestBody TorrentUserInfo userInfo) {
         TorrentUserInfo currentInfo = accountsService.findByType(id);
         currentInfo.setUsername(userInfo.getUsername());
-        currentInfo.setHash(userInfo.getHash());
+        currentInfo.generateHash(userInfo.getHash());
+        logger.debug("add torrent account with info={}", currentInfo);
         return accountsService.addTorrentAccount(currentInfo);
-    }
-
-    private void setKey(String userName) {
-        if (!isKeySet) {
-            UserDO userDO = userRepository.findByUsername(userName);
-            logger.debug("set key={}", userDO.getPassword());
-            CryptMaster.setKey(userDO.getPassword());
-            isKeySet = true;
-        }
     }
 }
