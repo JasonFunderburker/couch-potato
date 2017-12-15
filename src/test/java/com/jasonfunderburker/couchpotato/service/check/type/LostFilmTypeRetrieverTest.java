@@ -65,7 +65,10 @@ public class LostFilmTypeRetrieverTest {
         TorrentState state = new TorrentState();
         state.setInfo("SomeName. SomeName2. (S05E17)");
         item.setState(state);
-        item.setUserInfo(new TorrentUserInfo(uidValue, usessValue));
+        TorrentUserInfo userInfo = new TorrentUserInfo(uidValue, usessValue);
+        TorrentUserInfo spy = spy(userInfo);
+        when(spy.getPassword()).thenReturn(usessValue);
+        item.setUserInfo(spy);
         assertEquals(new URL("http://link1080p"), retriever.getDownloadLink(item, webClientMock));
         System.out.println(cookies);
         assertTrue(cookies.contains("uid="+uidValue));

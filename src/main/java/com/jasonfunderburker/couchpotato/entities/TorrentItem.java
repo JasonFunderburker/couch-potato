@@ -1,21 +1,28 @@
 package com.jasonfunderburker.couchpotato.entities;
 
 import com.jasonfunderburker.couchpotato.entities.converters.TorrentStatusConverter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Created by JasonFunderburker on 19.08.2016
  */
 @Entity
 @Table(name = "torrents_list")
+@Data
+@NoArgsConstructor
 public class TorrentItem implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(length = 4000)
     private String name;
+    @Column(length = 4000)
     private String link;
 
     @Column(name = "status_id")
@@ -25,18 +32,17 @@ public class TorrentItem implements Serializable {
     @Embedded
     private TorrentState state;
 
-    @Column(name = "error_text")
+    @Column(name = "error_text", length = 4000)
     private String errorText;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
     private TorrentUserInfo userInfo;
 
-    @Column(name = "file_name")
+    @Column(name = "file_name", length = 4000)
     private String fileName;
 
-    public TorrentItem() {
-    }
+    private LocalDateTime updateDate;
 
     public TorrentItem(TorrentItem item) {
         this.name = item.name;
@@ -46,86 +52,6 @@ public class TorrentItem implements Serializable {
         this.errorText = item.errorText;
         this.userInfo = item.userInfo;
         this.fileName = item.fileName;
+        this.updateDate = item.updateDate;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public TorrentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TorrentStatus status) {
-        this.status = status;
-    }
-
-    public TorrentState getState() {
-        return state;
-    }
-
-    public void setState(TorrentState state) {
-        this.state = state;
-    }
-
-    public String getErrorText() {
-        return errorText;
-    }
-
-    public void setErrorText(String errorText) {
-        this.errorText = errorText;
-    }
-
-    public TorrentUserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(TorrentUserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    @Override
-    public String toString() {
-        return "TorrentItem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", link='" + link + '\'' +
-                ", status=" + status +
-                ", state=" + state +
-//                ", type=" + type +
-                ", errorText='" + errorText + '\'' +
-                ", userInfo=" + userInfo +
-                ", fileName='" + fileName + '\'' +
-                '}';
-    }
-
-
 }

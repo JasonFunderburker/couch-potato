@@ -1,23 +1,14 @@
 package com.jasonfunderburker.couchpotato.entities;
 
+import lombok.Data;
+
+import javax.persistence.Embeddable;
+
 /**
  * Created by JasonFunderburker on 24.10.2016
  */
+@Data
+@Embeddable
 public class ScheduleSettings {
-    String scheduleTime;
-
-    public String getScheduleTime() {
-        return scheduleTime;
-    }
-
-    public void setScheduleTime(String scheduleTime) {
-        this.scheduleTime = scheduleTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ScheduleSettings{" +
-                "scheduleTime='" + scheduleTime + '\'' +
-                '}';
-    }
+    private String scheduleTime;
 }

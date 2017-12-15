@@ -11,5 +11,9 @@ public interface TorrentsAccountsService {
 
     TorrentType getTypeById(Long id);
 
-    void addTorrentAccount(TorrentUserInfo userInfo);
+    List<TorrentUserInfo> getAllTorrentAccounts();
+
+    TorrentUserInfo findByType(Long typeId);
+
+    TorrentUserInfo addTorrentAccount(TorrentUserInfo userInfo);
 }

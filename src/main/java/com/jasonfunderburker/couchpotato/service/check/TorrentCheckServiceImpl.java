@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDateTime;
 
 import static com.jasonfunderburker.couchpotato.entities.TorrentStatus.*;
 
@@ -62,6 +63,7 @@ public class TorrentCheckServiceImpl implements TorrentCheckService {
                         item.setFileName(fileName);
                         item.setStatus(DOWNLOADED);
                         item.setState(newState);
+                        item.setUpdateDate(LocalDateTime.now());
                     } else {
                         item.setStatus(UNCHANGED);
                         item.setErrorText(null);

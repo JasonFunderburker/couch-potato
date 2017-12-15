@@ -16,7 +16,7 @@ public class DataSourceConfiguration {
     @Value("${spring.datasource.url}")
     private String dataSourceUrl;
 
-    @Value("${spring.datasource.driver-class-name}")
+    @Value("${spring.datasource.driverClassName}")
     private String dataSourceDriverClass;
 
     @Bean

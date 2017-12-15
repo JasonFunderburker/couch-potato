@@ -60,14 +60,14 @@ public class NNMClubTypeRetriever extends BaseTypeRetriever {
         HtmlForm form = (HtmlForm)loginPage.getElementById("loginFrm");
         logger.debug("loginForm: {}", form.asText());
         TorrentUserInfo userInfo = item.getUserInfo();
-        if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
+        if (userInfo.getUsername() == null || userInfo.getHash() == null) {
             throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
         }
         logger.debug("userName: {}", userInfo.getUsername());
         form.getInputByName("username").type(userInfo.getUsername());
         String password = userInfo.getPassword();
         logger.debug("password: {}", password);
-        form.getInputByName("password").type(userInfo.getPassword());
+        form.getInputByName("password").type(password);
         Page page = form.getInputByName("login").click();
         if (!page.getWebResponse().getContentAsString().contains(userInfo.getUsername())) {
             logger.trace("page after login: {}", page.getWebResponse().getContentAsString());

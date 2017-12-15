@@ -63,7 +63,7 @@ public class RutrackerTypeRetriever extends BaseTypeRetriever {
         if (formElement instanceof HtmlForm) {
             HtmlForm form = (HtmlForm)formElement;
             TorrentUserInfo userInfo = item.getUserInfo();
-            if (userInfo.getUsername() == null || userInfo.getPassword() == null) {
+            if (userInfo.getUsername() == null || userInfo.getHash() == null) {
                 throw new TorrentRetrieveException("Login ERROR: please add or refresh your userId and usess value on setting page");
             }
             form.getInputByName("login_username").type(userInfo.getUsername());

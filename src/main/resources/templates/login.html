@@ -1,43 +1,43 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
-    <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}"/>
+    <meta charset="UTF-8"/>
+    <title>Couch-Potato</title>
+    <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 </head>
 <body>
-<div class="login">
-    <div class="login-screen">
-        <div class="app-title">
-            <h1>Login</h1>
-        </div>
-        <div class="app-title" th:if="${param.error}">
-            Invalid username and password.
-        </div>
-        <div class="app-title" th:if="${param.logout}">
-            You have been logged out.
-        </div>
-
-        <form class="login-form" th:action="@{/login}" method="post">
-            <div class="control-group">
-                <input type="text" class="login-field" value="" name="username" placeholder="username" id="login-name"/>
-                <label class="login-field-icon fui-user" for="login-name"></label>
+<div class='container'>
+    <div class="wrapper">
+        <form class="form-signin" th:action="@{/login}" method="post">
+            <div th:if="${param.error}">
+                Invalid username and password.
             </div>
-
-            <div class="control-group">
-                <input type="password" class="login-field" value="" name="password" placeholder="password" id="login-pass"/>
-                <label class="login-field-icon fui-lock" for="login-pass"></label>
+            <div th:if="${param.logout}">
+                You have been logged out.
             </div>
-
-            <input class="btn btn-primary btn-large btn-block" value="Login" type="submit"/>
+            <h3 class="form-signin-heading">Please Sign In</h3>
+            <div class="form-group">
+                <label for="username">Login</label>
+                <input type="text" class="form-control" id="username" name="username"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password"/>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block">Log in</button>
+            <div id='register'></div>
         </form>
-        <div class="app-title" th:unless="${registered}">
-            <a href="register.html" th:href="@{/register}">Create an account</a>
-        </div>
     </div>
 </div>
+
+<script src="https://fb.me/react-15.0.1.js"></script>
+<script src="https://fb.me/react-dom-15.0.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/babel" src="../static/js/register.js" th:src="@{js/register.js}"></script>
+
 </body>
-
-
 </html>

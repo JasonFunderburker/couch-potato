@@ -5,47 +5,53 @@ import com.jasonfunderburker.couchpotato.entities.UserDO;
 import com.jasonfunderburker.couchpotato.repositories.SingleUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 /**
  * Created on 28.02.2017
  *
  * @author JasonFunderburker
  */
-@Controller
+@RestController
+@RequestMapping("/register")
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
-
+    private final PasswordEncoder encoder;
     private final SingleUserRepository userRepository;
 
-    public RegisterController(SingleUserRepository userRepository) {
+    @Autowired
+    public RegisterController(PasswordEncoder encoder, SingleUserRepository userRepository) {
+        this.encoder = encoder;
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerPage(ModelMap model) {
-        if (userRepository.anyUserExist())
-            return "redirect:/login";
-        model.addAttribute("username", "");
-        model.addAttribute("password", "");
-        return "register";
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity<?> register(@RequestBody UserDO user) {
+        if (!userRepository.anyUserExist()) {
+            UserDO newUser = new UserDO(user.getUsername(), encoder.encode(user.getPassword()), singletonList(new Authority("ROLE_USER")));
+            userRepository.saveAndFlush(newUser);
+            logger.debug("User created: {}", newUser.getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(singletonMap("errorMessage","User already registered"));
+
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(String username, String password) {
-        if (!userRepository.anyUserExist()) {
-            userRepository.saveAndFlush(new UserDO(username, encoder.encode(password), Collections.singletonList(new Authority("ROLE_USER"))));
-            logger.debug("User created: {}", username);
-        }
-        return "redirect:/login";
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    public Map<String, Object> registerCheck() {
+        return singletonMap("anyUserExist", userRepository.anyUserExist());
     }
 }
