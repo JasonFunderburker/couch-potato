@@ -68,10 +68,11 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     }
 
     @Override
-    public void checkItem(long id) {
+    public TorrentItem checkItem(long id) {
         logger.debug("checkItem id: {}", id);
         TorrentItem item = torrentRepo.findOne(id);
         if (item != null) checkItem(item);
+        return item;
     }
 
     @Override

@@ -58,9 +58,9 @@ public class ItemListController {
     }
 
     @RequestMapping(value = "/{id}/check", method = RequestMethod.POST)
-    public void checkItemById(@PathVariable("id")long id) {
+    public TorrentItem checkItemById(@PathVariable("id")long id) {
         logger.debug("Check id={} now", id);
-        itemService.checkItem(id);
+        return itemService.checkItem(id);
     }
 
     @RequestMapping(value = "/checkAll", method = RequestMethod.POST)

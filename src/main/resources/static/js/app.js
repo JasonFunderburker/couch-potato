@@ -1,8 +1,70 @@
 var TorrentItem = React.createClass({
     getInitialState: function () {
+        return {
+            display: true,
+            torrent: this.props.torrent,
+            rowStyle: Row.getStyle(this.props.torrent),
+            checking: false
+        };
+    },
+    handleDelete() {
+        var self = this;
+        $.ajax({
+            url: 'http://localhost:4991/couch-potato/itemList/' + self.state.torrent.id,
+            type: 'DELETE',
+            success: function (result) {
+                self.setState({display: false});
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseJSON.message);
+            }
+        });
+    },
+    handleCheck() {
+        var self = this;
+        self.setState({checking: true});
+        $.ajax({
+            url: 'http://localhost:4991/couch-potato/itemList/' + self.state.torrent.id + '/check',
+            type: 'POST',
+            success: function (updatedTorrent) {
+                self.updateTorrent(updatedTorrent);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseJSON.message);
+            }
+        });
+    },
+    updateTorrent: function(updatedTorrent) {
+        this.setState({
+            torrent: updatedTorrent,
+            rowStyle: Row.getStyle(updatedTorrent),
+            checking: false
+        })
+    },
+    render: function () {
+        let torrent = this.state.torrent;
+        if (this.state.display === false) return null;
+        else return (
+            <tr className={this.state.rowStyle}>
+                <td>
+                    <div className="btn-group-vertical btn-group-lg">
+                        <button className="btn btn-danger" onClick={this.handleDelete}>Delete</button>
+                        <button className="btn btn-primary" onClick={this.handleCheck}>Check</button>
+                    </div>
+                </td>
+                <td><a href={torrent.link}>{torrent.name}</a></td>
+                <td>{this.state.checking ? <div className="loader"></div> : torrent.status}</td>
+                <td>{torrent.updateDate}</td>
+                <td>{torrent.errorText}</td>
+            </tr>
+        );
+    }
+});
+
+class Row {
+    static getStyle(torrent) {
         let rowStyleValue;
-        let torrentValue = this.props.torrent;
-        switch (torrentValue.status) {
+        switch (torrent.status) {
             case "NEW":
                 rowStyleValue = 'info';
                 break;
@@ -19,56 +81,10 @@ var TorrentItem = React.createClass({
             default:
                 rowStyleValue = '';
         }
-        return {
-            display: true,
-            torrent: torrentValue,
-            rowStyle: rowStyleValue
-        };
-    },
-    handleDelete() {
-        var self = this;
-        $.ajax({
-            url: 'http://localhost:4991/couch-potato/itemList/' + self.props.torrent.id,
-            type: 'DELETE',
-            success: function (result) {
-                self.setState({display: false});
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseJSON.message);
-            }
-        });
-    },
-    handleCheck() {
-        var self = this;
-        $.ajax({
-            url: 'http://localhost:4991/couch-potato/itemList/' + self.props.torrent.id + '/check',
-            type: 'POST',
-            success: function (result) {
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseJSON.message);
-            }
-        });
-    },
-    render: function () {
-        let torrent = this.state.torrent;
-        if (this.state.display === false) return null;
-        else return (
-            <tr className={this.state.rowStyle}>
-                <td>
-                    <div className="btn-group-vertical btn-group-lg">
-                        <button className="btn btn-danger" onClick={this.handleDelete}>Delete</button>
-                        <button className="btn btn-primary" onClick={this.handleCheck}>Check</button>
-                    </div>
-                </td>
-                <td><a href={torrent.link}>{torrent.name}</a></td>
-                <td>{torrent.status}</td>
-                <td>{torrent.updateDate}</td>
-                <td>{torrent.errorText}</td>
-            </tr>
-        );
+        return rowStyleValue;
     }
-});
+}
+
 var TorrentsTable = React.createClass({
     render: function () {
         var rows = [];
@@ -142,7 +158,7 @@ var AddModal = React.createClass({
                             <h4 className="modal-title">Add torrent item</h4>
                         </div>
                         <div className="modal-body">
-                            <TorrentForm />
+                            <TorrentForm/>
                         </div>
                     </div>
                 </div>
@@ -154,7 +170,7 @@ var AddButton = React.createClass({
     render: function () {
         return <button type="button" className="btn btn-lg btn-success" data-toggle="modal" data-target="#myModal">Add</button>
     }
-})
+});
 var CheckButton = React.createClass({
     handleCheckAll() {
         var self = this;
@@ -195,14 +211,14 @@ var App = React.createClass({
         return (
             <div>
                 <div className="form-inline">
-                    <AddButton/> <CheckButton />
+                    <AddButton/> <CheckButton/>
                 </div>
-                <AddModal />
+                <AddModal/>
                 <TorrentsTable torrents={this.state.torrents}/>
             </div>);
     }
 });
 
 ReactDOM.render(
-    <App />, document.getElementById('root')
+    <App/>, document.getElementById('root')
 );
