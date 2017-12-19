@@ -18,7 +18,7 @@ public interface TorrentsItemService {
 
     void checkItem(TorrentItem item);
 
-    void checkItem(long id);
+    TorrentItem checkItem(long id);
 
     void checkAllItems();
 
