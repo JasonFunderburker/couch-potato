@@ -19,6 +19,9 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
 
 ###
 #   H2 Settings

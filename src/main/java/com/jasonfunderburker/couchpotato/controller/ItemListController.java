@@ -1,5 +1,6 @@
 package com.jasonfunderburker.couchpotato.controller;
 
+import com.jasonfunderburker.couchpotato.entities.CheckInfo;
 import com.jasonfunderburker.couchpotato.entities.ScheduleSettings;
 import com.jasonfunderburker.couchpotato.entities.TorrentItem;
 import com.jasonfunderburker.couchpotato.entities.UserDO;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
 import static java.util.Objects.nonNull;
@@ -67,6 +66,11 @@ public class ItemListController {
     public void itemListStartCheck() {
         logger.debug("Start check now");
         itemService.checkAllItems();
+    }
+
+    @RequestMapping(value = "/lastCheck", method = RequestMethod.GET)
+    public CheckInfo getLastCheckInfo() {
+        return itemService.getLastCheckInfo();
     }
 
     @RequestMapping(value = "/scheduleCheck", method = RequestMethod.POST)

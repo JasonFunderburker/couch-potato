@@ -1,9 +1,6 @@
 package com.jasonfunderburker.couchpotato.service.torrents;
 
-import com.jasonfunderburker.couchpotato.entities.TorrentItem;
-import com.jasonfunderburker.couchpotato.entities.TorrentStatus;
-import com.jasonfunderburker.couchpotato.entities.TorrentType;
-import com.jasonfunderburker.couchpotato.entities.TorrentUserInfo;
+import com.jasonfunderburker.couchpotato.entities.*;
 import com.jasonfunderburker.couchpotato.repositories.AccountRepository;
 import com.jasonfunderburker.couchpotato.repositories.TorrentRepository;
 import com.jasonfunderburker.couchpotato.service.check.TorrentCheckService;
@@ -14,8 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
+
+import static java.time.LocalDateTime.now;
 
 /**
  * Created by JasonFunderburker on 01.09.2016
@@ -30,8 +28,7 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     private final AccountRepository accountRepo;
     private final TorrentRepository torrentRepo;
 
-    private volatile Date checkStartDate = null;
-    private volatile Date checkEndDate = null;
+    private volatile CheckInfo lastCheck = null;
 
     @Autowired
     public TorrentsItemServiceImpl(AccountRepository accountRepo, TorrentRepository torrentRepo) {
@@ -40,13 +37,8 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
     }
 
     @Override
-    public Date getCheckStartDate() {
-        return checkStartDate;
-    }
-
-    @Override
-    public Date getCheckEndDate() {
-        return checkEndDate;
+    public CheckInfo getLastCheckInfo() {
+        return lastCheck;
     }
 
     @Override
@@ -77,14 +69,17 @@ public class TorrentsItemServiceImpl implements TorrentsItemService {
 
     @Override
     public void checkAllItems() {
-        checkStartDate = new Date();
+        lastCheck = new CheckInfo();
+        lastCheck.setStartDate(now());
+
         List<TorrentItem> allItems = getItemsList();
         allItems.forEach(this::checkItem);
-        checkEndDate = new Date();
+
+        lastCheck.setEndDate(now());
     }
 
     @Override
-    public void addItemToList(TorrentItem item) throws IllegalArgumentException {
+    public void addItemToList(TorrentItem item) {
         logger.debug("add item: {}", item);
         item.setLink(item.getLink().replace("www.",""));
         item.setUserInfo(getUserInfoByType(getTypeNameFromLink(item.getLink())));
