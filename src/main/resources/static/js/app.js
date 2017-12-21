@@ -34,7 +34,7 @@ var TorrentItem = React.createClass({
             }
         });
     },
-    updateTorrent: function(updatedTorrent) {
+    updateTorrent: function (updatedTorrent) {
         this.setState({
             torrent: updatedTorrent,
             rowStyle: Row.getStyle(updatedTorrent),
@@ -53,7 +53,11 @@ var TorrentItem = React.createClass({
                     </div>
                 </td>
                 <td><a href={torrent.link}>{torrent.name}</a></td>
-                <td>{this.state.checking ? <div className="loader"></div> : torrent.status}</td>
+                <td>{this.state.checking ?
+                    <div className="loader"></div> :
+                    <h4><span className="label label-default">{torrent.status}</span></h4>
+                }
+                </td>
                 <td>{torrent.updateDate}</td>
                 <td>{torrent.errorText}</td>
             </tr>
@@ -168,7 +172,8 @@ var AddModal = React.createClass({
 });
 var AddButton = React.createClass({
     render: function () {
-        return <button type="button" className="btn btn-lg btn-success" data-toggle="modal" data-target="#myModal">Add</button>
+        return <button type="button" className="btn btn-lg btn-success" data-toggle="modal"
+                       data-target="#myModal">Add</button>
     }
 });
 var CheckButton = React.createClass({
@@ -185,7 +190,37 @@ var CheckButton = React.createClass({
         });
     },
     render: function () {
-        return <button type="button" className="btn btn-lg btn-primary" onClick={this.handleCheckAll}>Check Now</button>;
+        return <button type="button" className="btn btn-lg btn-primary" onClick={this.handleCheckAll}>Check
+            Now</button>;
+    }
+});
+var CheckInfo = React.createClass({
+    loadCheckInfo: function () {
+        var self = this;
+        $.ajax({
+            url: "http://localhost:4991/couch-potato/itemList/lastCheck"
+        }).then(function (data) {
+            self.setState({checkInfo: data})
+        });
+    },
+
+    getInitialState: function () {
+        return {checkInfo: []};
+    },
+
+    componentDidMount: function () {
+        this.loadCheckInfo();
+    },
+    render() {
+        return (
+            <div className="panel panel-success">
+                <div className="panel-heading">Last check</div>
+                <div className="panel-body">
+                    <div>Start date: {this.state.checkInfo.startDate}</div>
+                    <div>End date: {this.state.checkInfo.endDate}</div>
+                </div>
+            </div>
+        );
     }
 });
 
@@ -211,7 +246,12 @@ var App = React.createClass({
         return (
             <div>
                 <div className="form-inline">
-                    <AddButton/> <CheckButton/>
+                    <div className="col-sm-8">
+                        <AddButton/> <CheckButton/>
+                    </div>
+                    <div className="col-sm-4">
+                        <CheckInfo/>
+                    </div>
                 </div>
                 <AddModal/>
                 <TorrentsTable torrents={this.state.torrents}/>
